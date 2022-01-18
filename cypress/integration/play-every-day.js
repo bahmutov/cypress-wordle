@@ -1,11 +1,8 @@
 /// <reference types="cypress" />
 
-// Watch video "Solve Wordle Game For Real Using Cypress"
-// https://youtu.be/zQGLR6qXtq0
-import {
-  pickWordWithUniqueLetters,
-  pickWordWithMostCommonLetters,
-} from './utils'
+// Watch the video https://youtu.be/5X4RuyEoQgY
+
+import { countUniqueLetters, pickWordWithMostCommonLetters } from './utils'
 const silent = { log: false }
 
 function enterWord(word) {
@@ -23,18 +20,9 @@ function tryNextWord(wordList) {
   cy.log(`Word list has ${wordList.length} words`)
   // prefer words that have the most distinct letters
   // so we collect more information with each guess
-  const sampleWord = Cypress._.sample(wordList)
-  const uniqueLettersWord = pickWordWithUniqueLetters(wordList)
-  const uniqueCommonLettersWord = pickWordWithMostCommonLetters(wordList)
-  const word = uniqueCommonLettersWord
+  const word = pickWordWithMostCommonLetters(wordList)
 
-  console.log(
-    '(choices %s, %s, %s) word is "%s"',
-    sampleWord,
-    uniqueLettersWord,
-    uniqueCommonLettersWord,
-    word,
-  )
+  console.log('next word is "%s"', word)
   cy.log(`**${word}**`)
   enterWord(word)
 
@@ -88,8 +76,9 @@ function tryNextWord(wordList) {
     .then(() => {
       // after we have entered the word and looked at the feedback
       // we can decide if we solved it, or need to try the next word
-      if (count === word.length) {
+      if (count === countUniqueLetters(word)) {
         cy.log('**SOLVED**')
+        cy.get('#share-button').should('be.visible').wait(1000, silent)
       } else {
         tryNextWord(wordList)
       }
@@ -97,37 +86,71 @@ function tryNextWord(wordList) {
 }
 
 describe('Wordle', () => {
-  it('solves it in Hard mode', () => {
-    // look up the word list in the JavaScript bundle
-    // served by the application
-    cy.intercept('GET', '**/main.*.js', (req) => {
-      req.continue((res) => {
-        // by inserting a variable assignment here
-        // we will get the reference to the list on the window object
-        // which is reachable from this test
-        res.body = res.body.replace('=["cigar', '=window.wordList=["cigar')
-      })
-    }).as('words')
-    cy.clock(new Date('2022-01-18')).then((clock) => {
-      cy.visit('/').then(() => {
-        clock.restore()
-      })
-    })
-    // cy.get('game-icon[icon=close]:visible').click().wait(1000, silent)
-    cy.get('#settings-button').click().wait(1000)
-    cy.get('game-switch#hard-mode')
-      .find('.container')
-      .click()
-      .wait(1000, silent)
-    cy.get('game-switch#hard-mode').should('have.attr', 'checked')
-    cy.get('game-icon[icon=close]:visible').click().wait(1000)
+  // fetch the word list once
+  let wordList
 
-    cy.window()
-      // the "window.wordList" variable is now available
-      // that will be our initial list of words
-      .its('wordList')
-      .then((wordList) => {
+  // preserve the local storage to keep the game state, parsed
+  let gameState
+  // game streak statistics, as a string
+  let statistics
+
+  beforeEach(() => {
+    if (gameState) {
+      // remove the "lastPlayedTs" property from the game state
+      gameState.lastPlayedTs = null
+      gameState.lastCompletedTs = null
+      localStorage.setItem('gameState', JSON.stringify(gameState))
+    }
+    if (statistics) {
+      localStorage.setItem('statistics', statistics)
+    }
+  })
+
+  afterEach(() => {
+    gameState = JSON.parse(localStorage.getItem('gameState') || '')
+    statistics = localStorage.getItem('statistics')
+  })
+
+  // you could use cypress-each :) to make constructing separate tests better
+  Cypress._.range(1, 18).forEach((day) => {
+    const date = `2022-01-${day}`
+
+    it(`plays the word from ${date}`, () => {
+      // look up the word list in the JavaScript bundle
+      // served by the application
+      if (!wordList) {
+        cy.intercept('GET', '**/main.*.js', (req) => {
+          req.continue((res) => {
+            // by inserting a variable assignment here
+            // we will get the reference to the list on the window object
+            // which is reachable from this test
+            res.body = res.body.replace('=["cigar', '=window.wordList=["cigar')
+          })
+        })
+      }
+
+      cy.clock(new Date(date)).then((clock) => {
+        cy.visit('/')
+          .then(() => {
+            clock.restore()
+          })
+          .then(() => {
+            console.log(localStorage.getItem('gameState'))
+          })
+      })
+      if (!wordList) {
+        cy.window()
+          // the "window.wordList" variable is now available
+          // that will be our initial list of words
+          .its('wordList')
+          .then((list) => {
+            wordList = list
+          })
+      }
+
+      cy.then(() => {
         tryNextWord(wordList)
       })
+    })
   })
 })
