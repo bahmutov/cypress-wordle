@@ -3,14 +3,16 @@
 // Watch video "Solve Wordle Game For Real Using Cypress"
 // https://youtu.be/zQGLR6qXtq0
 
+const silent = { log: false }
+
 function enterWord(word) {
   word.split('').forEach((letter) => {
-    cy.window().trigger('keydown', { key: letter })
+    cy.window(silent).trigger('keydown', { key: letter, log: false })
   })
-  cy.window()
-    .trigger('keydown', { key: 'Enter' })
+  cy.window(silent)
+    .trigger('keydown', { key: 'Enter', log: false })
     // let the letter animation finish
-    .wait(2000)
+    .wait(2000, silent)
 }
 
 function uniqueLetters(word) {
@@ -26,10 +28,7 @@ function pickWordWithUniqueLetters(wordList) {
 
 function tryNextWord(wordList) {
   // we should be seeing the list shrink with each iteration
-  console.log('word list with %d words', wordList.length)
-  if (wordList.length < 20) {
-    console.log(wordList)
-  }
+  cy.log(`Word list has ${wordList.length} words`)
   // prefer words that have the most distinct letters
   // so we collect more information with each guess
   // const word = Cypress._.sample(wordList)
@@ -74,7 +73,11 @@ function tryNextWord(wordList) {
         if (evaluation === 'absent') {
           wordList = wordList.filter((w) => !w.includes(letter))
         } else if (evaluation === 'present') {
-          wordList = wordList.filter((w) => w.includes(letter))
+          wordList = wordList
+            .filter((w) => w.includes(letter))
+            // but remove words where the letter is AT this position
+            // because then the letter would be "correct"
+            .filter((w) => w[k] !== letter)
         } else if (evaluation === 'correct') {
           count += 1
           wordList = wordList.filter((w) => w[k] === letter)
@@ -105,9 +108,12 @@ describe('Wordle', () => {
       })
     }).as('words')
     cy.visit('/')
-    cy.get('game-icon[icon=close]:visible').click().wait(1000)
+    cy.get('game-icon[icon=close]:visible').click().wait(1000, silent)
     cy.get('#settings-button').click().wait(1000)
-    cy.get('game-switch#hard-mode').find('.container').click().wait(1000)
+    cy.get('game-switch#hard-mode')
+      .find('.container')
+      .click()
+      .wait(1000, silent)
     cy.get('game-switch#hard-mode').should('have.attr', 'checked')
     cy.get('game-icon[icon=close]:visible').click().wait(1000)
 
