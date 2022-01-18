@@ -1,5 +1,8 @@
 /// <reference types="cypress" />
 
+// Watch video "Solve Wordle Game For Real Using Cypress"
+// https://youtu.be/zQGLR6qXtq0
+
 function enterWord(word) {
   word.split('').forEach((letter) => {
     cy.window().trigger('keydown', { key: letter })

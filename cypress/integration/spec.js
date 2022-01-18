@@ -1,5 +1,8 @@
 /// <reference types="cypress" />
 
+// Watch the video "Solve Wordle Game Using Cypress"
+// https://youtu.be/pzFzOKEV-eo
+
 describe('Wordle', () => {
   it('loads', () => {
     cy.visit('/')
