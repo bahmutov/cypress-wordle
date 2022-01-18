@@ -38,13 +38,9 @@ function tryNextWord(wordList) {
       const evaluation = $tile.attr('evaluation')
 
       if (evaluation === 'absent') {
-        wordList = wordList.filter(
-          (w) => !w.includes(letter),
-        )
+        wordList = wordList.filter((w) => !w.includes(letter))
       } else if (evaluation === 'present') {
-        wordList = wordList.filter((w) =>
-          w.includes(letter),
-        )
+        wordList = wordList.filter((w) => w.includes(letter))
       } else if (evaluation === 'correct') {
         count += 1
         wordList = wordList.filter((w) => w[k] === letter)
@@ -70,10 +66,7 @@ describe('Wordle', () => {
         // by inserting a variable assignment here
         // we will get the reference to the list on the window object
         // which is reachable from this test
-        res.body = res.body.replace(
-          '=["cigar',
-          '=window.wordList=["cigar',
-        )
+        res.body = res.body.replace('=["cigar', '=window.wordList=["cigar')
       })
     }).as('words')
     cy.visit('/')
@@ -81,9 +74,7 @@ describe('Wordle', () => {
       // that will be our initial list of words
       .its('wordList')
       .then((wordList) => {
-        cy.get('game-icon[icon=close]:visible')
-          .click()
-          .wait(1000)
+        cy.get('game-icon[icon=close]:visible').click().wait(1000)
 
         tryNextWord(wordList)
       })
