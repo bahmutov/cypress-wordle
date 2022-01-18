@@ -1,7 +1,9 @@
 # cypress-wordle
 
-> "Solve" Wordle game using Cypress test
+> Solve the Wordle game using Cypress test
 
-![Solved game](./images/solved.png)
+![Really solved game](./images/really-solved.png)
+
+## Specs
 
 See [spec.js](./cypress/integration/spec.js) file.
