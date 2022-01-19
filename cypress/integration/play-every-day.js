@@ -112,7 +112,7 @@ describe('Wordle', () => {
   })
 
   // you could use cypress-each :) to make constructing separate tests better
-  Cypress._.range(1, 18).forEach((day) => {
+  Cypress._.range(1, 6).forEach((day) => {
     const date = `2022-01-${day}`
 
     it(`plays the word from ${date}`, () => {
@@ -129,15 +129,16 @@ describe('Wordle', () => {
         })
       }
 
-      cy.clock(new Date(date)).then((clock) => {
-        cy.visit('/')
-          .then(() => {
-            clock.restore()
-          })
-          .then(() => {
-            console.log(localStorage.getItem('gameState'))
-          })
+      // set the application clock to desired date,
+      // while leaving all other time functions unchanged
+      // https://on.cypress.io/clock
+      cy.clock(Date.UTC(2022, 0, day), ['Date'])
+      cy.visit('/').then(() => {
+        console.log(localStorage.getItem('gameState'))
       })
+
+      cy.get('game-icon[icon=close]:visible').click().wait(1000, silent)
+
       if (!wordList) {
         cy.window()
           // the "window.wordList" variable is now available

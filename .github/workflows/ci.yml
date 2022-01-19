@@ -1,0 +1,5 @@
+name: ci
+on: [push]
+jobs:
+  test:
+    uses: bahmutov/cypress-workflows/.github/workflows/standard.yml@v1
