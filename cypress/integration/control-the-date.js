@@ -109,6 +109,8 @@ describe('Wordle', () => {
       })
     }).as('words')
 
+    // set the application clock to desired date,
+    // while leaving all other time functions unchanged
     cy.clock(Date.UTC(2022, 0, 1), ['Date'])
     cy.visit('/')
     cy.get('game-icon[icon=close]:visible').click().wait(1000, silent)
