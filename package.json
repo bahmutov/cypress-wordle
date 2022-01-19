@@ -19,6 +19,7 @@
   "homepage": "https://github.com/bahmutov/cypress-wordle#readme",
   "devDependencies": {
     "cypress": "^9.2.1",
+    "cypress-data-session": "^1.15.1",
     "prettier": "^2.5.1"
   }
 }

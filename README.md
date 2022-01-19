@@ -12,6 +12,7 @@
 - [control-the-date.js](./cypress/integration/control-the-date.js) overwrites the current date using [cy.clock](https://on.cypress.io/clock) command and plays the Wordle from other dates. Watch the video ["Play Wordle From Any Date Using cy.clock"](https://youtu.be/ZmcOFr2UzZU).
 - [play-every-day.js](./cypress/integration/play-every-day.js) sets synthetic Date in each test to accumulate a long winning streak playing every word from Jan 1st to Jan 17th 2022. Find the recording [here](https://youtu.be/5X4RuyEoQgY).
 - [colors.js](./cypress/integration/colors.js) plays the game using color accessible mode using the dark theme. Saves the screenshot of the solution in the "cypress/screenshots" folder.
+- [wordlist-data-session.js](./cypress/integration/wordlist-data-session.js) uses [cypress-data-session](https://github.com/bahmutov/cypress-data-session) plugin to download and keep the word list array cached in memory.
 
 ## Videos
 
