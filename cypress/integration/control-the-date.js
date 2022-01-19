@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 
-// Watch video "Solve Wordle In Hard Mode"
-// https://youtu.be/SeRLrdtr3Vs
+// Watch video "Play Wordle From Any Date Using cy.clock"
+// https://youtu.be/ZmcOFr2UzZU
 import {
   pickWordWithUniqueLetters,
   pickWordWithMostCommonLetters,
@@ -26,7 +26,7 @@ function tryNextWord(wordList) {
   const sampleWord = Cypress._.sample(wordList)
   const uniqueLettersWord = pickWordWithUniqueLetters(wordList)
   const uniqueCommonLettersWord = pickWordWithMostCommonLetters(wordList)
-  const word = uniqueCommonLettersWord
+  const word = uniqueLettersWord
 
   console.log(
     '(choices %s, %s, %s) word is "%s"',
@@ -97,7 +97,7 @@ function tryNextWord(wordList) {
 }
 
 describe('Wordle', () => {
-  it('solves it in Hard mode', () => {
+  it('solves it in Hard mode on specific date', () => {
     // look up the word list in the JavaScript bundle
     // served by the application
     cy.intercept('GET', '**/main.*.js', (req) => {
@@ -109,6 +109,7 @@ describe('Wordle', () => {
       })
     }).as('words')
 
+    cy.clock(Date.UTC(2022, 0, 1), ['Date'])
     cy.visit('/')
     cy.get('game-icon[icon=close]:visible').click().wait(1000, silent)
     cy.get('#settings-button').click().wait(1000)
