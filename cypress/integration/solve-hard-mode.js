@@ -108,12 +108,13 @@ describe('Wordle', () => {
         res.body = res.body.replace('=["cigar', '=window.wordList=["cigar')
       })
     }).as('words')
-    cy.clock(new Date('2022-01-18')).then((clock) => {
-      cy.visit('/').then(() => {
-        clock.restore()
-      })
-    })
-    // cy.get('game-icon[icon=close]:visible').click().wait(1000, silent)
+    // cy.clock(new Date('2022-01-18')).then((clock) => {
+    //   cy.visit('/').then(() => {
+    //     clock.restore()
+    //   })
+    // })
+    cy.visit('/')
+    cy.get('game-icon[icon=close]:visible').click().wait(1000, silent)
     cy.get('#settings-button').click().wait(1000)
     cy.get('game-switch#hard-mode')
       .find('.container')
