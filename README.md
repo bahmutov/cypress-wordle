@@ -1,4 +1,4 @@
-# cypress-wordle
+# cypress-wordle [![ci](https://github.com/bahmutov/cypress-wordle/actions/workflows/ci.yml/badge.svg?branch=main&event=push)](https://github.com/bahmutov/cypress-wordle/actions/workflows/ci.yml)
 
 > Solve the Wordle game using Cypress test
 
