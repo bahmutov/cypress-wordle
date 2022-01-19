@@ -5,4 +5,6 @@ jobs:
     # use the reusable workflow to check out the code, install dependencies
     # and run the Cypress tests
     # https://github.com/bahmutov/cypress-workflows
+    # Watch the video "Run Wordle E2E Tests On GitHub Actions Using A Workflow"
+    # https://youtu.be/fJmNyMnBvbs for details
     uses: bahmutov/cypress-workflows/.github/workflows/standard.yml@v1
