@@ -1,7 +1,5 @@
 {
   "fixturesFolder": false,
-  "supportFile": false,
-  "pluginsFile": false,
   "baseUrl": "https://www.powerlanguage.co.uk/wordle/",
   "includeShadowDom": true
 }
