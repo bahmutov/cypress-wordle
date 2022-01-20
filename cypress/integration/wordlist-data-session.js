@@ -116,6 +116,10 @@ describe('Wordle word list using data session', () => {
       validate: true,
       shareAcrossSpecs: true,
     })
+    // optionally save the wordlist as a JSON fixture file
+    // .then((wordList) => {
+    //   cy.writeFile('cypress/fixtures/wordlist.json', wordList)
+    // })
   })
 
   // preserve the local storage to keep the game state, parsed

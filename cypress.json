@@ -1,5 +1,4 @@
 {
-  "fixturesFolder": false,
   "baseUrl": "https://www.powerlanguage.co.uk/wordle/",
   "includeShadowDom": true
 }
