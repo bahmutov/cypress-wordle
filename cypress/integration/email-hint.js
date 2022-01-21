@@ -1,6 +1,9 @@
 /// <reference types="cypress" />
 
-import { countUniqueLetters, pickWordWithUniqueLetters } from './utils'
+// watch the video "Generate A Daily Wordle Hint Email With Screenshot"
+// https://youtu.be/NOwNg-Nhv4o
+
+import { pickWordWithUniqueLetters } from './utils'
 const silent = { log: false }
 
 function enterWord(word) {

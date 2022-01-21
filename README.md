@@ -13,6 +13,7 @@
 - [play-every-day.js](./cypress/integration/play-every-day.js) sets synthetic Date in each test to accumulate a long winning streak playing every word from Jan 1st to Jan 17th 2022. Find the recording [here](https://youtu.be/5X4RuyEoQgY).
 - [colors.js](./cypress/integration/colors.js) plays the game using color accessible mode using the dark theme. Saves the screenshot of the solution in the "cypress/screenshots" folder.
 - [wordlist-data-session.js](./cypress/integration/wordlist-data-session.js) uses [cypress-data-session](https://github.com/bahmutov/cypress-data-session) plugin to download and keep the word list array cached in memory. Watch the video ["Use cypress-data-session To Store The Word List"](https://youtu.be/UZwE1KTz-98).
+- [email-hint.js](./cypress/integration/email-hint.js) hides all letters in the solution but one and emails the screenshot of the solved puzzle daily to myself. Watch the video ["Generate A Daily Wordle Hint Email With Screenshot"](https://youtu.be/NOwNg-Nhv4o).
 
 ## Videos
 
