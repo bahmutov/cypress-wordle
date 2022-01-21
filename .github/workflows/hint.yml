@@ -7,7 +7,7 @@ on:
       email:
         description: Email to send the hint to
         type: string
-        default: ${{ secrets.WORDLE_HINT_EMAIL }}
+        default: ''
         required: false
   schedule:
     - cron: '0 5 * * *'
@@ -26,4 +26,4 @@ jobs:
         env:
           SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
           SENDGRID_FROM: ${{ secrets.SENDGRID_FROM }}
-          WORDLE_HINT_EMAIL: ${{ inputs.email }}
+          WORDLE_HINT_EMAIL: ${{ inputs.email || secrets.WORDLE_HINT_EMAIL }}
