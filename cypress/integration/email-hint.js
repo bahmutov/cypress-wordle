@@ -1,12 +1,6 @@
 /// <reference types="cypress" />
 
-// Watch video "Solve Wordle In Hard Mode"
-// https://youtu.be/SeRLrdtr3Vs
-import {
-  pickWordWithUniqueLetters,
-  pickWordWithMostCommonLetters,
-  countUniqueLetters,
-} from './utils'
+import { countUniqueLetters, pickWordWithUniqueLetters } from './utils'
 const silent = { log: false }
 
 function enterWord(word) {
@@ -22,20 +16,7 @@ function enterWord(word) {
 function tryNextWord(wordList) {
   // we should be seeing the list shrink with each iteration
   cy.log(`Word list has ${wordList.length} words`)
-  // prefer words that have the most distinct letters
-  // so we collect more information with each guess
-  const sampleWord = Cypress._.sample(wordList)
-  const uniqueLettersWord = pickWordWithUniqueLetters(wordList)
-  const uniqueCommonLettersWord = pickWordWithMostCommonLetters(wordList)
-  const word = uniqueCommonLettersWord
-
-  console.log(
-    '(choices %s, %s, %s) word is "%s"',
-    sampleWord,
-    uniqueLettersWord,
-    uniqueCommonLettersWord,
-    word,
-  )
+  const word = pickWordWithUniqueLetters(wordList)
   cy.log(`**${word}**`)
   enterWord(word)
 
@@ -91,6 +72,28 @@ function tryNextWord(wordList) {
       // we can decide if we solved it, or need to try the next word
       if (count === countUniqueLetters(word)) {
         cy.log('**SOLVED**')
+        cy.get('#share-button').should('be.visible').wait(1000, silent)
+        cy.get('game-icon[icon=close]:visible').click().wait(1000, silent)
+
+        cy.log('**hiding the solved letters**')
+        cy.get('game-tile[letter]').each(($gameTile) => {
+          cy.wrap($gameTile).find('.tile').invoke('text', '')
+        })
+        // but keep one of the letters in the solved word
+        const randomLetterIndex = Cypress._.random(0, 4)
+        const randomLetter = word[randomLetterIndex]
+        cy.get(`game-row[letters=${word}]`)
+          .find('game-tile[letter]')
+          .eq(randomLetterIndex)
+          .find('.tile')
+          .invoke('text', randomLetter)
+          .wait(1000, silent)
+        cy.get('#board-container')
+          .should('be.visible')
+          .screenshot('solved')
+          .then((screenshotInfo) => {
+            // use cy.task to email myself the image with the 1 letter hint
+          })
       } else {
         tryNextWord(wordList)
       }
@@ -98,34 +101,13 @@ function tryNextWord(wordList) {
 }
 
 describe('Wordle', () => {
-  it('solves it in Hard mode', () => {
-    // look up the word list in the JavaScript bundle
-    // served by the application
-    cy.intercept('GET', '**/main.*.js', (req) => {
-      req.continue((res) => {
-        // by inserting a variable assignment here
-        // we will get the reference to the list on the window object
-        // which is reachable from this test
-        res.body = res.body.replace('=["cigar', '=window.wordList=["cigar')
-      })
-    }).as('words')
+  beforeEach(() => {
+    cy.fixture('wordlist.json').as('wordList')
+  })
 
+  it('emails a hint', function () {
     cy.visit('/')
     cy.get('game-icon[icon=close]:visible').click().wait(1000, silent)
-    cy.get('#settings-button').click().wait(1000)
-    cy.get('game-switch#hard-mode')
-      .find('.container')
-      .click()
-      .wait(1000, silent)
-    cy.get('game-switch#hard-mode').should('have.attr', 'checked')
-    cy.get('game-icon[icon=close]:visible').click().wait(1000)
-
-    cy.window()
-      // the "window.wordList" variable is now available
-      // that will be our initial list of words
-      .its('wordList')
-      .then((wordList) => {
-        tryNextWord(wordList)
-      })
+    tryNextWord(this.wordList)
   })
 })
