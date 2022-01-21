@@ -16,7 +16,7 @@ jobs:
         #  https://github.com/cypress-io/github-action
         uses: cypress-io/github-action@v2
         with:
-          spec: 'cypress/integration/email-hint.spec.js'
+          spec: 'cypress/integration/email-hint.js'
         env:
           SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
           SENDGRID_FROM: ${{ secrets.SENDGRID_FROM }}
