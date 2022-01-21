@@ -43,7 +43,10 @@ module.exports = (on, config) => {
       }
       console.log('sending an email to %s with a hint %s', msg.to, hint)
       const response = await sgMail.send(msg)
-      console.log(response)
+      if (response[0].statusCode !== 202) {
+        console.error(response)
+        throw new Error('SendGrid failed to send the email')
+      }
 
       return response[0]
     },

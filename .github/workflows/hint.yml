@@ -1,0 +1,21 @@
+name: hint
+# run the workflow every day at 5 am
+# or when we trigger the workflow manually
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 5 * * *'
+jobs:
+  test:
+    # use the reusable workflow to check out the code, install dependencies
+    # and run the Cypress tests
+    # https://github.com/bahmutov/cypress-workflows
+    # Watch the video "Run Wordle E2E Tests On GitHub Actions Using A Workflow"
+    # https://youtu.be/fJmNyMnBvbs for details
+    uses: bahmutov/cypress-workflows/.github/workflows/standard.yml@v1
+    with:
+      spec: 'cypress/integration/email-hint.spec.js'
+    env:
+      SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
+      SENDGRID_FROM: ${{ secrets.SENDGRID_FROM }}
+      WORDLE_HINT_EMAIL: ${{ secrets.WORDLE_HINT_EMAIL }}
