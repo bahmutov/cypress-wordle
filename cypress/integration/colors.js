@@ -76,7 +76,9 @@ function tryNextWord(wordList) {
         cy.log('**SOLVED**')
         cy.get('#share-button').should('be.visible').wait(1000, silent)
         cy.get('game-icon[icon=close]:visible').click().wait(1000, silent)
-        cy.get('#board-container').should('be.visible').screenshot('solved')
+        cy.get('#board-container')
+          .should('be.visible')
+          .screenshot('solved', { overwrite: true })
       } else {
         tryNextWord(wordList)
       }

@@ -26,21 +26,20 @@ module.exports = (on, config) => {
       const sgMail = require('@sendgrid/mail')
       sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
+      // including images in the SendGrid email is a bit tricky
+      // https://sendgrid.com/blog/embedding-images-emails-facts/
+      // for small images, inline them in the email
+      const imageBase64 = fs.readFileSync(screenshotPath).toString('base64')
+
       const msg = {
         to: process.env.WORDLE_HINT_EMAIL,
         from: process.env.SENDGRID_FROM,
         subject: 'Wordle daily hint',
         text: `Today's hint: ${hint}`,
-        html: `Today's hint: <strong>${hint}</strong>`,
-        attachments: [
-          {
-            content: fs.readFileSync(screenshotPath, 'base64'),
-            filename: 'hint.png',
-            type: 'image/png',
-            disposition: 'attachment',
-            content_id: 'mytext',
-          },
-        ],
+        html: `
+          <div>Today's hint: <strong>${hint}</strong></div>
+          <div><img src="data:image/png;base64,${imageBase64}" /></div>
+        `,
       }
       console.log('sending an email to %s with a hint %s', msg.to, hint)
       const response = await sgMail.send(msg)

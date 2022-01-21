@@ -102,7 +102,7 @@ function tryNextWord(wordList) {
           .eq(randomLetterIndex)
           .find('.tile')
           .invoke('text', randomLetter)
-          .wait(1000, silent)
+          .wait(1500, silent)
         cy.get('#board-container')
           .should('be.visible')
           .screenshot('solved', { overwrite: true })
