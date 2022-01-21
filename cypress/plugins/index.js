@@ -37,8 +37,9 @@ module.exports = (on, config) => {
         subject: 'Wordle daily hint',
         text: `Today's hint: ${hint}`,
         html: `
-          <div>Today's hint: <strong>${hint}</strong></div>
+          <div>Today's hint: <pre>${hint}</pre></div>
           <div><img src="data:image/png;base64,${imageBase64}" /></div>
+          <div>Solved by <a href="https://github.com/bahmutov/cypress-wordle">cypress-wordle</a></div>
         `,
       }
       console.log('sending an email to %s with a hint %s', msg.to, hint)
