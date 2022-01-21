@@ -3,6 +3,12 @@ name: hint
 # or when we trigger the workflow manually
 on:
   workflow_dispatch:
+    inputs:
+      email:
+        description: Email to send the hint to
+        type: string
+        default: ${{ secrets.WORDLE_HINT_EMAIL }}
+        required: false
   schedule:
     - cron: '0 5 * * *'
 jobs:
@@ -20,4 +26,4 @@ jobs:
         env:
           SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
           SENDGRID_FROM: ${{ secrets.SENDGRID_FROM }}
-          WORDLE_HINT_EMAIL: ${{ secrets.WORDLE_HINT_EMAIL }}
+          WORDLE_HINT_EMAIL: ${{ inputs.email }}
