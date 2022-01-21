@@ -42,7 +42,10 @@ module.exports = (on, config) => {
           <div>Solved by <a href="https://github.com/bahmutov/cypress-wordle">cypress-wordle</a></div>
         `,
       }
-      console.log('sending an email to %s with a hint %s', msg.to, hint)
+
+      // because the full email might be hidden by the CI, let's only show the first 3 letters
+      const maskedEmail = msg.to.slice(0, 3) + '...'
+      console.log('sending an email to %s with a hint %s', maskedEmail, hint)
       const response = await sgMail.send(msg)
       if (response[0].statusCode !== 202) {
         console.error(response)
