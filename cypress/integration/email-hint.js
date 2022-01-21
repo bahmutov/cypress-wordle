@@ -37,8 +37,15 @@ function tryNextWord(wordList) {
     .then((letters) => {
       // look at the letters by status: first the correct ones,
       // then the present ones, then the absent ones
+      const correctLetters = Cypress._.filter(letters, {
+        evaluation: 'correct',
+      })
+      if (correctLetters.length === 5) {
+        return true // solved!
+      }
+
       const ordered = [].concat(
-        Cypress._.filter(letters, { evaluation: 'correct' }),
+        correctLetters,
         Cypress._.filter(letters, { evaluation: 'present' }),
         Cypress._.filter(letters, { evaluation: 'absent' }),
       )
@@ -67,10 +74,13 @@ function tryNextWord(wordList) {
         }
       })
     })
-    .then(() => {
+    .then((solved) => {
       // after we have entered the word and looked at the feedback
       // we can decide if we solved it, or need to try the next word
-      if (count === countUniqueLetters(word)) {
+      // make sure to compare the "solved" to boolean true
+      // because Cypress .then command receives whatever value yielded
+      // from the previous command
+      if (solved === true) {
         cy.log('**SOLVED**')
         cy.get('#share-button').should('be.visible').wait(1000, silent)
         cy.get('game-icon[icon=close]:visible').click().wait(1000, silent)
@@ -82,6 +92,11 @@ function tryNextWord(wordList) {
         // but keep one of the letters in the solved word
         const randomLetterIndex = Cypress._.random(0, 4)
         const randomLetter = word[randomLetterIndex]
+        // prepare text-only hint
+        const hint = '01234'
+          .replace(randomLetterIndex, randomLetter)
+          .replace(/\d/g, '*')
+
         cy.get(`game-row[letters=${word}]`)
           .find('game-tile[letter]')
           .eq(randomLetterIndex)
@@ -90,9 +105,13 @@ function tryNextWord(wordList) {
           .wait(1000, silent)
         cy.get('#board-container')
           .should('be.visible')
-          .screenshot('solved')
-          .then((screenshotInfo) => {
+          .screenshot('solved', { overwrite: true })
+          .then(() => {
+            // the screenshot was saved under the screenshot folder
+            // plus the spec filename plus "solved.png"
+            const screenshot = `${Cypress.spec.name}/solved.png`
             // use cy.task to email myself the image with the 1 letter hint
+            cy.task('sendHintEmail', { screenshot, hint })
           })
       } else {
         tryNextWord(wordList)
