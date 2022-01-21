@@ -15,7 +15,7 @@ jobs:
     uses: bahmutov/cypress-workflows/.github/workflows/standard.yml@v1
     with:
       spec: 'cypress/integration/email-hint.spec.js'
-    env:
+    secrets:
       SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
       SENDGRID_FROM: ${{ secrets.SENDGRID_FROM }}
       WORDLE_HINT_EMAIL: ${{ secrets.WORDLE_HINT_EMAIL }}
