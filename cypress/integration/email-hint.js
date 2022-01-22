@@ -79,7 +79,7 @@ describe('Wordle', () => {
         })
 
         const hint = pickHints(word, numberOfHints)
-        // the hint will be something like "--c-a"
+        // the hint will be something like "__c_a"
         // let's reveal the tiles containing the letters
         hint.split('').forEach((letter, index) => {
           if (letter !== maskLetter) {
