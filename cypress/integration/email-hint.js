@@ -56,7 +56,7 @@ describe('Wordle', () => {
 
   it('emails a hint', function () {
     const numberOfHints = Cypress.env('hints') || 1
-    expect(numberOfHints).to.be.within(1, 5)
+    expect(numberOfHints, 'number of hints').to.be.within(1, 5)
 
     cy.visit('/')
     cy.get('game-icon[icon=close]:visible').click().wait(1000, silent)
