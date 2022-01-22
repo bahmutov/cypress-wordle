@@ -8,12 +8,56 @@ import { tryNextWord } from './utils'
 
 const silent = { log: false }
 
+const maskLetter = '-'
+
+/**
+ * Given a 5 letter word, hides all the letters except for N random hints.
+ * Returns `*c***` or similar with the hints revealed and the other letters hidden.
+ * @param {string} word
+ * @param {number} n
+ */
+function pickHints(word, n) {
+  // but keep one of the letters in the solved word
+  const positions = '01234'.split('')
+  const hintPositions = Cypress._.sampleSize(positions, n)
+  let hint = '01234'
+  hintPositions.forEach((position) => {
+    hint = hint.replace(String(position), word[position])
+  })
+  // replace the remaining digits with the mask
+  return hint.replace(/\d/g, maskLetter)
+}
+
 describe('Wordle', () => {
   beforeEach(() => {
     cy.fixture('wordlist.json').as('wordList')
   })
 
+  it('prepares one hint', () => {
+    const hint = pickHints('table', 1)
+    expect(hint).to.have.length(5)
+    // other letters should be hidden
+    expect(hint.replace(/[table]/g, '')).to.have.length(4)
+  })
+
+  it('prepares two hints', () => {
+    const hint = pickHints('table', 2)
+    expect(hint).to.have.length(5)
+    // other letters should be hidden
+    expect(hint.replace(/[table]/g, '')).to.have.length(3)
+  })
+
+  it('prepares three hints', () => {
+    const hint = pickHints('table', 3)
+    expect(hint).to.have.length(5)
+    // other letters should be hidden
+    expect(hint.replace(/[table]/g, '')).to.have.length(2)
+  })
+
   it('emails a hint', function () {
+    const numberOfHints = Cypress.env('hints') || 1
+    expect(numberOfHints).to.be.within(1, 5)
+
     cy.visit('/')
     cy.get('game-icon[icon=close]:visible').click().wait(1000, silent)
 
@@ -33,22 +77,22 @@ describe('Wordle', () => {
             .find('.tile', silent)
             .invoke(silent, 'text', '')
         })
-        // but keep one of the letters in the solved word
-        const randomLetterIndex = Cypress._.random(0, 4)
-        const randomLetter = word[randomLetterIndex]
-        // prepare text-only hint
-        const hint = '01234'
-          .replace(String(randomLetterIndex), randomLetter)
-          .replace(/\d/g, '*')
 
-        cy.get(`game-row[letters=${word}]`)
-          .find('game-tile[letter]')
-          .eq(randomLetterIndex)
-          .find('.tile')
-          .invoke('text', randomLetter)
-          .wait(1500, silent)
+        const hint = pickHints(word, numberOfHints)
+        // the hint will be something like "--c-a"
+        // let's reveal the tiles containing the letters
+        hint.split('').forEach((letter, index) => {
+          if (letter !== maskLetter) {
+            cy.get(`game-row[letters=${word}]`)
+              .find('game-tile[letter]')
+              .eq(index)
+              .find('.tile')
+              .invoke('text', letter)
+          }
+        })
 
         cy.get('#board-container')
+          .wait(1500, silent)
           .should('be.visible')
           .screenshot('solved', { overwrite: true })
           .then(() => {
