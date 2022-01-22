@@ -13,6 +13,11 @@ module.exports = (on, config) => {
   require('cypress-data-session/src/plugin')(on, config)
 
   on('task', {
+    async log(message) {
+      console.log(message)
+      return message
+    },
+
     async sendHintEmail({ screenshot, hint }) {
       console.log('sending hint %s', hint)
       const screenshotPath = path.join(config.screenshotsFolder, screenshot)

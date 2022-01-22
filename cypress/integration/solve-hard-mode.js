@@ -10,6 +10,10 @@ import {
 const silent = { log: false }
 
 function enterWord(word) {
+  if (!Cypress._.isString(word)) {
+    throw new Error('word must be a string')
+  }
+
   word.split('').forEach((letter) => {
     cy.window(silent).trigger('keydown', { key: letter, log: false })
   })
@@ -22,6 +26,10 @@ function enterWord(word) {
 function tryNextWord(wordList) {
   // we should be seeing the list shrink with each iteration
   cy.log(`Word list has ${wordList.length} words`)
+  if (Cypress._.isEmpty(wordList)) {
+    throw new Error('wordList is empty')
+  }
+
   // prefer words that have the most distinct letters
   // so we collect more information with each guess
   const sampleWord = Cypress._.sample(wordList)
@@ -37,6 +45,7 @@ function tryNextWord(wordList) {
     word,
   )
   cy.log(`**${word}**`)
+  cy.task('log', `picked "${word}" out of ${wordList.length} words`)
   enterWord(word)
 
   // count the correct letters. If we have all letters correct, we are done
@@ -91,6 +100,7 @@ function tryNextWord(wordList) {
       // we can decide if we solved it, or need to try the next word
       if (count === countUniqueLetters(word)) {
         cy.log('**SOLVED**')
+        cy.task('log', `solved with word "${word}"`)
       } else {
         tryNextWord(wordList)
       }
