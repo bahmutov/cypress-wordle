@@ -1,112 +1,98 @@
+// @ts-check
 /// <reference types="cypress" />
 
 // watch the video "Generate A Daily Wordle Hint Email With Screenshot"
 // https://youtu.be/NOwNg-Nhv4o
 
-import { pickWordWithUniqueLetters } from './utils'
+import { tryNextWord } from './utils'
+
 const silent = { log: false }
 
-function enterWord(word) {
-  word.split('').forEach((letter) => {
-    cy.window(silent).trigger('keydown', { key: letter, log: false })
+const maskLetter = '_'
+
+/**
+ * Given a 5 letter word, hides all the letters except for N random hints.
+ * Returns `*c***` or similar with the hints revealed and the other letters hidden.
+ * @param {string} word
+ * @param {number} n
+ */
+function pickHints(word, n) {
+  // but keep one of the letters in the solved word
+  const positions = '01234'.split('')
+  const hintPositions = Cypress._.sampleSize(positions, n)
+  let hint = '01234'
+  hintPositions.forEach((position) => {
+    hint = hint.replace(String(position), word[position])
   })
-  cy.window(silent)
-    .trigger('keydown', { key: 'Enter', log: false })
-    // let the letter animation finish
-    .wait(2000, silent)
+  // replace the remaining digits with the mask
+  return hint.replace(/\d/g, maskLetter)
 }
 
-function tryNextWord(wordList) {
-  // we should be seeing the list shrink with each iteration
-  cy.log(`Word list has ${wordList.length} words`)
-  const word = pickWordWithUniqueLetters(wordList)
-  cy.log(`**${word}**`)
-  enterWord(word)
+describe('Wordle', () => {
+  beforeEach(() => {
+    cy.fixture('wordlist.json').as('wordList')
+  })
 
-  // count the correct letters. If we have all letters correct, we are done
-  let count = 0
+  it('prepares one hint', () => {
+    const hint = pickHints('table', 1)
+    expect(hint).to.have.length(5)
+    // other letters should be hidden
+    expect(hint.replace(/[table]/g, '')).to.have.length(4)
+  })
 
-  cy.get(`game-row[letters=${word}]`)
-    .find('game-tile')
-    .should('have.length', word.length)
-    .then(($tiles) => {
-      return $tiles.toArray().map((tile, k) => {
-        const letter = tile.getAttribute('letter')
-        const evaluation = tile.getAttribute('evaluation')
-        console.log('%d: letter %s is %s', k, letter, evaluation)
-        return { k, letter, evaluation }
-      })
-    })
-    .then((letters) => {
-      // look at the letters by status: first the correct ones,
-      // then the present ones, then the absent ones
-      const correctLetters = Cypress._.filter(letters, {
-        evaluation: 'correct',
-      })
-      if (correctLetters.length === 5) {
-        return true // solved!
-      }
+  it('prepares two hints', () => {
+    const hint = pickHints('table', 2)
+    expect(hint).to.have.length(5)
+    // other letters should be hidden
+    expect(hint.replace(/[table]/g, '')).to.have.length(3)
+  })
 
-      const ordered = [].concat(
-        correctLetters,
-        Cypress._.filter(letters, { evaluation: 'present' }),
-        Cypress._.filter(letters, { evaluation: 'absent' }),
-      )
+  it('prepares three hints', () => {
+    const hint = pickHints('table', 3)
+    expect(hint).to.have.length(5)
+    // other letters should be hidden
+    expect(hint.replace(/[table]/g, '')).to.have.length(2)
+  })
 
-      console.table(ordered)
-      const seen = new Set()
-      ordered.forEach(({ k, letter, evaluation }) => {
-        // only consider the status from the characters
-        // we see for the first time in this word
-        if (seen.has(letter)) {
-          return
-        }
-        seen.add(letter)
+  it('emails a hint', function () {
+    const numberOfHints = Cypress.env('hints') || 1
+    expect(numberOfHints, 'number of hints').to.be.within(1, 5)
 
-        if (evaluation === 'absent') {
-          wordList = wordList.filter((w) => !w.includes(letter))
-        } else if (evaluation === 'present') {
-          wordList = wordList
-            .filter((w) => w.includes(letter))
-            // but remove words where the letter is AT this position
-            // because then the letter would be "correct"
-            .filter((w) => w[k] !== letter)
-        } else if (evaluation === 'correct') {
-          count += 1
-          wordList = wordList.filter((w) => w[k] === letter)
-        }
-      })
-    })
-    .then((solved) => {
+    cy.visit('/')
+    cy.get('game-icon[icon=close]:visible').click().wait(1000, silent)
+
+    tryNextWord(this.wordList).then((word) => {
       // after we have entered the word and looked at the feedback
       // we can decide if we solved it, or need to try the next word
-      // make sure to compare the "solved" to boolean true
-      // because Cypress .then command receives whatever value yielded
-      // from the previous command
-      if (solved === true) {
+      if (Cypress._.isString(word)) {
+        expect(word).to.have.length(5)
+
         cy.log('**SOLVED**')
         cy.get('#share-button').should('be.visible').wait(1000, silent)
         cy.get('game-icon[icon=close]:visible').click().wait(1000, silent)
 
         cy.log('**hiding the solved letters**')
-        cy.get('game-tile[letter]').each(($gameTile) => {
-          cy.wrap($gameTile).find('.tile').invoke('text', '')
+        cy.get('game-tile[letter]', silent).each(($gameTile) => {
+          cy.wrap($gameTile, silent)
+            .find('.tile', silent)
+            .invoke(silent, 'text', '')
         })
-        // but keep one of the letters in the solved word
-        const randomLetterIndex = Cypress._.random(0, 4)
-        const randomLetter = word[randomLetterIndex]
-        // prepare text-only hint
-        const hint = '01234'
-          .replace(randomLetterIndex, randomLetter)
-          .replace(/\d/g, '*')
 
-        cy.get(`game-row[letters=${word}]`)
-          .find('game-tile[letter]')
-          .eq(randomLetterIndex)
-          .find('.tile')
-          .invoke('text', randomLetter)
-          .wait(1500, silent)
+        const hint = pickHints(word, numberOfHints)
+        // the hint will be something like "__c_a"
+        // let's reveal the tiles containing the letters
+        hint.split('').forEach((letter, index) => {
+          if (letter !== maskLetter) {
+            cy.get(`game-row[letters=${word}]`)
+              .find('game-tile[letter]')
+              .eq(index)
+              .find('.tile')
+              .invoke('text', letter)
+          }
+        })
+
         cy.get('#board-container')
+          .wait(1500, silent)
           .should('be.visible')
           .screenshot('solved', { overwrite: true })
           .then(() => {
@@ -116,20 +102,7 @@ function tryNextWord(wordList) {
             // use cy.task to email myself the image with the 1 letter hint
             cy.task('sendHintEmail', { screenshot, hint })
           })
-      } else {
-        tryNextWord(wordList)
       }
     })
-}
-
-describe('Wordle', () => {
-  beforeEach(() => {
-    cy.fixture('wordlist.json').as('wordList')
-  })
-
-  it('emails a hint', function () {
-    cy.visit('/')
-    cy.get('game-icon[icon=close]:visible').click().wait(1000, silent)
-    tryNextWord(this.wordList)
   })
 })

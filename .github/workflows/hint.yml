@@ -1,5 +1,5 @@
 name: hint
-# run the workflow every day at 5 am
+# run the workflow every morning
 # or when we trigger the workflow manually
 on:
   workflow_dispatch:
@@ -9,8 +9,13 @@ on:
         type: string
         default: ''
         required: false
+      hints:
+        description: Number of letters to reveal
+        type: integer
+        default: 1
   schedule:
-    - cron: '0 5 * * *'
+    # UTC time
+    - cron: '0 7 * * *'
 jobs:
   hint:
     runs-on: ubuntu-20.04
@@ -23,6 +28,7 @@ jobs:
         uses: cypress-io/github-action@v2
         with:
           spec: 'cypress/integration/email-hint.js'
+          env: 'hints=${{ github.event.inputs.hints }}'
         env:
           SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
           SENDGRID_FROM: ${{ secrets.SENDGRID_FROM }}

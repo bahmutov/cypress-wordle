@@ -1,3 +1,7 @@
+// @ts-check
+
+const silent = { log: false }
+
 export function getLetters() {
   return Cypress._.range(0, 26).map((i) => String.fromCharCode(i + 97))
 }
@@ -47,4 +51,75 @@ export function pickWordWithUniqueLetters(wordList) {
   const mostWords = Cypress._.last(Cypress._.values(partitioned))
   console.log(partitioned)
   return Cypress._.sample(mostWords)
+}
+
+export function enterWord(word) {
+  word.split('').forEach((letter) => {
+    cy.window(silent).trigger('keydown', { key: letter, log: false })
+  })
+  cy.window(silent)
+    .trigger('keydown', { key: 'Enter', log: false })
+    // let the letter animation finish
+    .wait(2000, silent)
+}
+
+export function tryNextWord(wordList) {
+  // we should be seeing the list shrink with each iteration
+  cy.log(`Word list has ${wordList.length} words`)
+  const word = pickWordWithUniqueLetters(wordList)
+  cy.log(`**${word}**`)
+  enterWord(word)
+
+  return cy
+    .get(`game-row[letters=${word}]`)
+    .find('game-tile', silent)
+    .should('have.length', word.length)
+    .then(($tiles) => {
+      return $tiles.toArray().map((tile, k) => {
+        const letter = tile.getAttribute('letter')
+        const evaluation = tile.getAttribute('evaluation')
+        console.log('%d: letter %s is %s', k, letter, evaluation)
+        return { k, letter, evaluation }
+      })
+    })
+    .then((letters) => {
+      // look at the letters by status: first the correct ones,
+      // then the present ones, then the absent ones
+      const correctLetters = Cypress._.filter(letters, {
+        evaluation: 'correct',
+      })
+      if (correctLetters.length === 5) {
+        return word // solved!
+      }
+
+      const ordered = [].concat(
+        correctLetters,
+        Cypress._.filter(letters, { evaluation: 'present' }),
+        Cypress._.filter(letters, { evaluation: 'absent' }),
+      )
+
+      console.table(ordered)
+      const seen = new Set()
+      ordered.forEach(({ k, letter, evaluation }) => {
+        // only consider the status from the characters
+        // we see for the first time in this word
+        if (seen.has(letter)) {
+          return
+        }
+        seen.add(letter)
+
+        if (evaluation === 'absent') {
+          wordList = wordList.filter((w) => !w.includes(letter))
+        } else if (evaluation === 'present') {
+          wordList = wordList
+            .filter((w) => w.includes(letter))
+            // but remove words where the letter is AT this position
+            // because then the letter would be "correct"
+            .filter((w) => w[k] !== letter)
+        } else if (evaluation === 'correct') {
+          wordList = wordList.filter((w) => w[k] === letter)
+        }
+      })
+      return tryNextWord(wordList)
+    })
 }
