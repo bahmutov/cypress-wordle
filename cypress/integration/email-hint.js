@@ -8,7 +8,7 @@ import { tryNextWord } from './utils'
 
 const silent = { log: false }
 
-const maskLetter = '-'
+const maskLetter = '_'
 
 /**
  * Given a 5 letter word, hides all the letters except for N random hints.
