@@ -14,6 +14,7 @@ module.exports = (on, config) => {
 
   on('task', {
     async sendHintEmail({ screenshot, hint }) {
+      console.log('sending hint %s', hint)
       const screenshotPath = path.join(config.screenshotsFolder, screenshot)
       console.log('screenshotPath', screenshotPath)
 
