@@ -31,3 +31,6 @@ jobs:
           tag: start-word
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
+          SENDGRID_FROM: ${{ secrets.SENDGRID_FROM }}
+          WORDLE_HINT_EMAIL: ${{ github.event.inputs.email || secrets.WORDLE_HINT_EMAIL }}
