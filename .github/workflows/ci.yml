@@ -8,8 +8,9 @@ jobs:
     # Watch the video "Run Wordle E2E Tests On GitHub Actions Using A Workflow"
     # https://youtu.be/fJmNyMnBvbs for details
     uses: bahmutov/cypress-workflows/.github/workflows/standard.yml@v1
+    timeout-minutes: 10
     with:
       record: true
       group: 'All tests'
     secrets:
-      CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+      recordKey: ${{ secrets.CYPRESS_RECORD_KEY }}
