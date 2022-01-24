@@ -7,9 +7,9 @@ jobs:
     # https://github.com/bahmutov/cypress-workflows
     # Watch the video "Run Wordle E2E Tests On GitHub Actions Using A Workflow"
     # https://youtu.be/fJmNyMnBvbs for details
-    uses: bahmutov/cypress-workflows/.github/workflows/standard.yml@v1
+    uses: bahmutov/cypress-workflows/.github/workflows/parallel.yml@v1
     with:
-      record: true
+      n: 5
       group: 'All tests'
     secrets:
       recordKey: ${{ secrets.CYPRESS_RECORD_KEY }}
