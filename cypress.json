@@ -1,5 +1,6 @@
 {
   "baseUrl": "https://www.powerlanguage.co.uk/wordle/",
   "includeShadowDom": true,
-  "projectId": "6iu6px"
+  "projectId": "6iu6px",
+  "ignoreTestFiles": "utils.js"
 }
