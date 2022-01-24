@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import { pickWordWithMostCommonLetters } from './utils'
+import { pickWordWithMostCommonLetters, countUniqueLetters } from './utils'
 const silent = { log: false }
 
 function enterWord(word) {
@@ -21,6 +21,7 @@ function tryNextWord(wordList) {
   const word = pickWordWithMostCommonLetters(wordList)
   cy.log(`**${word}**`)
   enterWord(word)
+  cy.task('print', `trying ${word}`)
 
   // count the correct letters. If we have all letters correct, we are done
   let count = 0
@@ -72,7 +73,7 @@ function tryNextWord(wordList) {
     .then(() => {
       // after we have entered the word and looked at the feedback
       // we can decide if we solved it, or need to try the next word
-      if (count === word.length) {
+      if (count === countUniqueLetters(word)) {
         cy.log('**SOLVED**')
         cy.get('#share-button').should('be.visible').wait(1000, silent)
         cy.get('game-icon[icon=close]:visible').click().wait(1000, silent)

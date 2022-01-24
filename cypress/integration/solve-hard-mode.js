@@ -45,7 +45,7 @@ function tryNextWord(wordList) {
     word,
   )
   cy.log(`**${word}**`)
-  cy.task('log', `picked "${word}" out of ${wordList.length} words`)
+  cy.task('print', `picked "${word}" out of ${wordList.length} words`)
   enterWord(word)
 
   // count the correct letters. If we have all letters correct, we are done
@@ -100,7 +100,7 @@ function tryNextWord(wordList) {
       // we can decide if we solved it, or need to try the next word
       if (count === countUniqueLetters(word)) {
         cy.log('**SOLVED**')
-        cy.task('log', `solved with word "${word}"`)
+        cy.task('print', `solved with word "${word}"`)
       } else {
         tryNextWord(wordList)
       }

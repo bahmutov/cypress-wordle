@@ -3,6 +3,8 @@
 // Watch video "Solve Wordle Game For Real Using Cypress"
 // https://youtu.be/zQGLR6qXtq0
 
+import { countUniqueLetters } from './utils'
+
 function enterWord(word) {
   word.split('').forEach((letter) => {
     cy.window().trigger('keydown', { key: letter })
@@ -52,7 +54,7 @@ function tryNextWord(wordList) {
     .then(() => {
       // after we have entered the word and looked at the feedback
       // we can decide if we solved it, or need to try the next word
-      if (count === word.length) {
+      if (count === countUniqueLetters(word)) {
         cy.log('**SOLVED**')
       } else {
         tryNextWord(wordList)

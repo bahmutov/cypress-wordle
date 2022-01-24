@@ -13,9 +13,9 @@ module.exports = (on, config) => {
   require('cypress-data-session/src/plugin')(on, config)
 
   on('task', {
-    async log(message) {
+    print(message) {
       console.log(message)
-      return message
+      return null
     },
 
     async sendAlmostSolved({ screenshot }) {
