@@ -41,7 +41,7 @@ module.exports = (on, config) => {
       const msg = {
         to: process.env.WORDLE_HINT_EMAIL,
         from: process.env.SENDGRID_FROM,
-        subject: 'Wordle daily hint almost solved',
+        subject: 'Wordle almost solved',
         text: `Almost solved it, see HTML image`,
         html: `
           <div>Start word: <pre>${startWord}</pre></div>
