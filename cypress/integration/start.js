@@ -1,32 +1,9 @@
 // @ts-check
 /// <reference types="cypress" />
 
-// watch the video "Generate A Daily Wordle Hint Email With Screenshot"
-// https://youtu.be/NOwNg-Nhv4o
-
 import { tryNextWord } from './utils'
 
 const silent = { log: false }
-
-const maskLetter = '_'
-
-/**
- * Given a 5 letter word, hides all the letters except for N random hints.
- * Returns `*c***` or similar with the hints revealed and the other letters hidden.
- * @param {string} word
- * @param {number} n
- */
-function pickHints(word, n) {
-  // but keep one of the letters in the solved word
-  const positions = '01234'.split('')
-  const hintPositions = Cypress._.sampleSize(positions, n)
-  let hint = '01234'
-  hintPositions.forEach((position) => {
-    hint = hint.replace(String(position), word[position])
-  })
-  // replace the remaining digits with the mask
-  return hint.replace(/\d/g, maskLetter)
-}
 
 describe('Wordle', () => {
   beforeEach(() => {
