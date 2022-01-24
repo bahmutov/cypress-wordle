@@ -12,6 +12,8 @@ describe('Wordle', () => {
 
   it('starts with provided word', function () {
     const word = Cypress.env('startWord') || 'start'
+    expect(word).to.be.a('string').and.to.have.length(5)
+
     cy.visit('/')
     cy.get('game-icon[icon=close]:visible').click().wait(1000, silent)
 
