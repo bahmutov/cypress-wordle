@@ -47,13 +47,7 @@ describe('Wordle', () => {
         cy.log('**SOLVED**')
         cy.get('#share-button').should('be.visible').wait(1000, silent)
         cy.get('game-icon[icon=close]:visible').click().wait(1000, silent)
-
-        cy.log('**hiding the solved letters**')
-        cy.get('game-tile[letter]', silent).each(($gameTile) => {
-          cy.wrap($gameTile, silent)
-            .find('.tile', silent)
-            .invoke(silent, 'text', '')
-        })
+        cy.screenshot('start-word')
       }
     })
   })
