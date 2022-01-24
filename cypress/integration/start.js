@@ -24,7 +24,28 @@ describe('Wordle', () => {
         cy.log('**SOLVED**')
         cy.get('#share-button').should('be.visible').wait(1000, silent)
         cy.get('game-icon[icon=close]:visible').click().wait(1000, silent)
-        cy.screenshot('start-word')
+        cy.screenshot('start-word', { overwrite: true })
+
+        cy.log('**hiding the solution**')
+        cy.get(`game-row[letters=${word}]`)
+          .find('game-tile[letter]', silent)
+          .each(($gameTile) => {
+            cy.wrap($gameTile, silent)
+              .find('.tile', silent)
+              .invoke(silent, 'text', '')
+          })
+
+        // emailing the board without the solution
+        cy.get('#board-container')
+          .wait(1500, silent)
+          .should('be.visible')
+          .screenshot('almostSolved', { overwrite: true })
+          .then(() => {
+            const screenshot = `${Cypress.spec.name}/almostSolved.png`
+            // use cy.task to email myself the image
+            // with the almost solved board
+            cy.task('sendAlmostSolved', { screenshot })
+          })
       }
     })
   })
