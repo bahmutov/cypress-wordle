@@ -1,0 +1,29 @@
+name: start
+# run the workflow every morning
+# or when we trigger the workflow manually
+# and enter the start word
+on:
+  workflow_dispatch:
+    inputs:
+      email:
+        description: Email to send the hint to
+        type: string
+        default: ''
+        required: false
+      startWord:
+        description: The first word to try
+        type: string
+        required: true
+jobs:
+  hint:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout 🛎
+        uses: actions/checkout@v2
+
+      - name: Cypress run 🧪
+        #  https://github.com/cypress-io/github-action
+        uses: cypress-io/github-action@v2
+        with:
+          spec: 'cypress/integration/start.js'
+          env: 'startWord=${{ github.event.inputs.startWord }}'

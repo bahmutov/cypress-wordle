@@ -63,10 +63,12 @@ export function enterWord(word) {
     .wait(2000, silent)
 }
 
-export function tryNextWord(wordList) {
+export function tryNextWord(wordList, word) {
   // we should be seeing the list shrink with each iteration
   cy.log(`Word list has ${wordList.length} words`)
-  const word = pickWordWithUniqueLetters(wordList)
+  if (!word) {
+    word = pickWordWithUniqueLetters(wordList)
+  }
   cy.log(`**${word}**`)
   enterWord(word)
 
