@@ -1,7 +1,8 @@
 // @ts-check
 /// <reference types="cypress" />
 
-import { tryNextWord } from './utils'
+// use page objects to close the modals, solve the puzzle, etc
+import { Start, Playing, Solved } from './pages'
 
 const silent = { log: false }
 
@@ -15,17 +16,15 @@ describe('Wordle', () => {
     expect(word).to.be.a('string').and.to.have.length(5)
 
     cy.visit('/')
-    cy.get('game-icon[icon=close]:visible').click().wait(1000, silent)
-
-    tryNextWord(this.wordList, word).then((word) => {
+    Start.close()
+    Playing.solve(word).then((word) => {
       // after we have entered the word and looked at the feedback
       // we can decide if we solved it, or need to try the next word
       if (Cypress._.isString(word)) {
         expect(word).to.have.length(5)
 
         cy.log('**SOLVED**')
-        cy.get('#share-button').should('be.visible').wait(1000, silent)
-        cy.get('game-icon[icon=close]:visible').click().wait(1000, silent)
+        Solved.close()
         cy.screenshot('start-word', { overwrite: true })
 
         cy.log('**hiding the solution**')
