@@ -57,22 +57,22 @@ function updateWordList(wordList, word, letters) {
   return wordList
 }
 
-export function tryNextWord(wordList, word) {
+export function tryNextWord(wordList, word, PO = Playing) {
   // we should be seeing the list shrink with each iteration
   cy.log(`Word list has ${wordList.length} words`)
   if (!word) {
     word = pickWordWithUniqueLetters(wordList)
   }
   cy.log(`**${word}**`)
-  enterWord(word)
+  PO.enterWord(word)
 
-  return Playing.getLetters(word).then((letters) => {
+  return PO.getLetters(word).then((letters) => {
     wordList = updateWordList(wordList, word, letters)
     if (wordList === word) {
       // we solved it!
       return word
     }
-    return tryNextWord(wordList)
+    return tryNextWord(wordList, null, PO)
   })
 }
 
@@ -85,10 +85,10 @@ export const Playing = {
    * word list is under the alias "wordList".
    * @param {string} startWord Optional 5 letter word to start with.
    */
-  solve(startWord) {
+  solve(startWord, PO = Playing) {
     return cy
       .get('@wordList')
-      .then((wordList) => tryNextWord(wordList, startWord))
+      .then((wordList) => tryNextWord(wordList, startWord, PO))
   },
 
   /**
