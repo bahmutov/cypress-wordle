@@ -52,8 +52,15 @@ describe('Wordle', () => {
   })
 
   it('removes the current word', function () {
-    cy.clock(Date.UTC(2022, 0, 26), ['Date'])
+    const mockDate = Date.UTC(2022, 0, 26, 1, 0, 0, 0)
+    cy.clock(mockDate, ['Date'])
+    cy.task('print', `set date to ${new Date(mockDate).toUTCString()}`)
     cy.visit('/')
+      .its('localStorage.gameState')
+      .then(JSON.parse)
+      .its('solution')
+      .should('equal', 'sugar')
+
     Start.close()
     Playing.solve('grasp').should('equal', 'sugar')
   })
