@@ -15,6 +15,7 @@
 - [wordlist-data-session.js](./cypress/integration/wordlist-data-session.js) uses [cypress-data-session](https://github.com/bahmutov/cypress-data-session) plugin to download and keep the word list array cached in memory. Watch the video ["Use cypress-data-session To Store The Word List"](https://youtu.be/UZwE1KTz-98).
 - [email-hint.js](./cypress/integration/email-hint.js) hides all letters in the solution but one and emails the screenshot of the solved puzzle daily to myself. Watch the video ["Generate A Daily Wordle Hint Email With Screenshot"](https://youtu.be/NOwNg-Nhv4o).
 - [start.js](./cypress/integration/start.js) lets the user provide the starting word. You can trigger this spec from the GitHub Actions UI using the workflow [start.yml](./.github/workflows/start.yml).
+- [vue-wordle.js](./cypress/integration/vue-wordle.js) plays a version of Wordle implemented in [yyx990803/vue-wordle](https://github.com/yyx990803/vue-wordle) interacting via page objects.
 
 ## Videos
 
