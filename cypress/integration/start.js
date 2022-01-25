@@ -50,4 +50,11 @@ describe('Wordle', () => {
       }
     })
   })
+
+  it('removes the current word', function () {
+    cy.clock(Date.UTC(2022, 0, 26), ['Date'])
+    cy.visit('/')
+    Start.close()
+    Playing.solve('grasp').should('equal', 'sugar')
+  })
 })
