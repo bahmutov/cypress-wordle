@@ -94,6 +94,9 @@ export function tryNextWord(wordList, word) {
         return word // solved!
       }
 
+      // immediately exclude the current word from the list
+      wordList = wordList.filter((w) => w !== word)
+
       const ordered = [].concat(
         correctLetters,
         Cypress._.filter(letters, { evaluation: 'present' }),

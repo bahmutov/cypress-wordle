@@ -3,25 +3,17 @@
 // Watch video "Solve Wordle Game For Real Using Cypress"
 // https://youtu.be/zQGLR6qXtq0
 
-import { countUniqueLetters } from './utils'
-
-function enterWord(word) {
-  word.split('').forEach((letter) => {
-    cy.window().trigger('keydown', { key: letter })
-  })
-  cy.window()
-    .trigger('keydown', { key: 'Enter' })
-    // let the letter animation finish
-    .wait(2000)
-}
+import { enterWord, countUniqueLetters } from './utils'
 
 function tryNextWord(wordList) {
   // we should be seeing the list shrink with each iteration
-  console.log('word list with %d words', wordList.length)
   if (wordList.length < 20) {
     console.log(wordList)
   }
+  cy.log(`word list with ${wordList.length} words`)
+  expect(wordList).to.not.be.empty
   const word = Cypress._.sample(wordList)
+  expect(word, 'picked word').to.be.a('string')
   enterWord(word)
 
   // count the correct letters. If we have all letters correct, we are done
