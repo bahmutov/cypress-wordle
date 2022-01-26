@@ -5,7 +5,7 @@
 /// <reference types="cypress" />
 
 const silent = { log: false }
-import { Playing } from './utils/pages'
+import { solve } from '../utils/solver'
 
 // interact with the VueWordle via custom page object
 const PlayingVueWordle = {
@@ -43,6 +43,16 @@ const PlayingVueWordle = {
           })
       })
   },
+
+  /** Checks if the Wordle was solved */
+  solved(greeting) {
+    // contains the given greeting (like "Genius") ig any
+    ;(greeting ? cy.contains('.message', greeting) : cy.get('.message'))
+      .should('be.visible')
+      // contain the solved tiles minimap
+      .find('pre')
+      .should('be.visible')
+  },
 }
 
 describe('Vue Wordle', { baseUrl: 'https://vue-wordle.netlify.app/' }, () => {
@@ -54,15 +64,13 @@ describe('Vue Wordle', { baseUrl: 'https://vue-wordle.netlify.app/' }, () => {
     const word = 'start'
     cy.visit(`/?${btoa(word)}`)
     PlayingVueWordle.enterWord(word)
-    // TODO: move to a custom page object
-    cy.contains('.message', 'Genius').should('be.visible')
+    PlayingVueWordle.solved('Genius')
   })
 
   it('finds the target word starting with another word', () => {
     const word = 'start'
     cy.visit(`/?${btoa(word)}`)
-    Playing.solve('super', PlayingVueWordle).should('equal', word)
-    // TODO: move to a custom page object
-    cy.get('.message').should('be.visible').find('pre').should('be.visible')
+    solve('super', PlayingVueWordle).should('equal', word)
+    PlayingVueWordle.solved()
   })
 })

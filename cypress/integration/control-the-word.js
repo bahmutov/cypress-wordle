@@ -2,7 +2,8 @@
 /// <reference types="cypress" />
 
 // use page objects to close the modals, solve the puzzle, etc
-import { Start, Playing } from './utils/pages'
+import { Start, Playing, Solved } from './utils/pages'
+import { solve } from './utils/solver'
 
 describe('Wordle', () => {
   beforeEach(() => {
@@ -16,6 +17,7 @@ describe('Wordle', () => {
       .then(JSON.parse)
       .should('have.property', 'solution', 'sugar')
     Start.close()
-    Playing.solve('grasp').should('equal', 'sugar')
+    solve('grasp', Playing).should('equal', 'sugar')
+    Solved.close()
   })
 })

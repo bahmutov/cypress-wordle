@@ -3,6 +3,7 @@
 
 // use page objects to close the modals, solve the puzzle, etc
 import { Start, Playing, Solved } from './utils/pages'
+import { solve } from './utils/solver'
 
 const silent = { log: false }
 
@@ -17,7 +18,7 @@ describe('Wordle', () => {
 
     cy.visit('/')
     Start.close()
-    Playing.solve(word).then((word) => {
+    solve(word, Playing).then((word) => {
       // after we have entered the word and looked at the feedback
       // we can decide if we solved it, or need to try the next word
       if (Cypress._.isString(word)) {

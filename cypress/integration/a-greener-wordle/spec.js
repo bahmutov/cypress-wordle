@@ -4,7 +4,7 @@
 
 /// <reference types="cypress" />
 
-import { Start, Playing } from '../utils/pages'
+import { Start, Playing, Solved } from '../utils/pages'
 import { solve } from '../utils/solver'
 
 describe(
@@ -34,6 +34,7 @@ describe(
       Start.close()
       cy.contains('.title', 'A GREENER WORLDLE')
       solve('earth', Playing)
+      Solved.close()
     })
   },
 )
