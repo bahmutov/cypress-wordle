@@ -2,6 +2,9 @@
 /// <reference types="cypress" />
 
 // common page operations: closing the modals, etc
+// for detailed explanation, watch the video
+// "Solving Various Wordle Apps Using The Same Algorithm And Different Page Objects"
+// https://youtu.be/4MOfRd6I3UY
 import { enterWord } from '.'
 
 const silent = { log: false }
