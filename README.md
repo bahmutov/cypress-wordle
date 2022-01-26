@@ -16,6 +16,7 @@
 - [email-hint.js](./cypress/integration/email-hint.js) hides all letters in the solution but one and emails the screenshot of the solved puzzle daily to myself. Watch the video ["Generate A Daily Wordle Hint Email With Screenshot"](https://youtu.be/NOwNg-Nhv4o).
 - [start.js](./cypress/integration/start.js) lets the user provide the starting word. You can trigger this spec from the GitHub Actions UI using the workflow [start.yml](./.github/workflows/start.yml).
 - [vue-wordle.js](./cypress/integration/vue-wordle.js) plays a version of Wordle implemented in [yyx990803/vue-wordle](https://github.com/yyx990803/vue-wordle) interacting via page objects.
+- [a-greener-wordle/spec.js](./cypress/integration/a-greener-wordle/spec.js) solves the "Greener Wordle" version hosted at [https://agreenerworldle.org/](https://agreenerworldle.org/).
 
 ## Videos
 
