@@ -2,7 +2,7 @@
   "baseUrl": "https://www.powerlanguage.co.uk/wordle/",
   "includeShadowDom": true,
   "projectId": "6iu6px",
-  "ignoreTestFiles": "utils/*",
+  "ignoreTestFiles": "**/utils/*",
   "retries": {
     "runMode": 1,
     "openMode": 0
