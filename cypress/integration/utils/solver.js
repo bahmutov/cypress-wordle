@@ -4,7 +4,10 @@
 import { pickWordWithUniqueLetters } from '.'
 
 export function solve(startWord, pageObject) {
-  expect(pageObject).to.respondTo('enterWord').and.to.respondTo('getLetters')
+  expect(pageObject, 'page object')
+    .to.be.an('object')
+    .and.to.respondTo('enterWord')
+    .and.to.respondTo('getLetters')
 
   return cy
     .get('@wordList')
