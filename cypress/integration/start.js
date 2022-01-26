@@ -2,7 +2,7 @@
 /// <reference types="cypress" />
 
 // use page objects to close the modals, solve the puzzle, etc
-import { Start, Playing, Solved } from './pages'
+import { Start, Playing, Solved } from './utils/pages'
 
 const silent = { log: false }
 

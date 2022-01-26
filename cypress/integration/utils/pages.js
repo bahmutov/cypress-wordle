@@ -2,7 +2,7 @@
 /// <reference types="cypress" />
 
 // common page operations: closing the modals, etc
-import { enterWord, pickWordWithUniqueLetters } from './utils'
+import { enterWord, pickWordWithUniqueLetters } from '.'
 
 const silent = { log: false }
 

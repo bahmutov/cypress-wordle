@@ -1,10 +1,11 @@
+// @ts-check
 // solves the Vue version of the Wordle game
 // https://github.com/yyx990803/vue-wordle
 
 /// <reference types="cypress" />
 
 const silent = { log: false }
-import { Playing } from './pages'
+import { Playing } from './utils/pages'
 
 // interact with the VueWordle via custom page object
 const PlayingVueWordle = {

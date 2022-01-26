@@ -2,7 +2,7 @@
 /// <reference types="cypress" />
 
 // use page objects to close the modals, solve the puzzle, etc
-import { Start, Playing } from './pages'
+import { Start, Playing } from './utils/pages'
 
 describe('Wordle', () => {
   beforeEach(() => {
