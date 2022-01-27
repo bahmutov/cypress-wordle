@@ -14,6 +14,10 @@ export function solve(startWord, pageObject) {
     .then((wordList) => tryNextWord(wordList, startWord, pageObject))
 }
 
+/**
+ * Takes the feedback from the game about each letter,
+ * and trims the word list to remove words that don't match.
+ */
 function updateWordList(wordList, word, letters) {
   // look at the letters by status: first the correct ones,
   // then the present ones, then the absent ones
@@ -58,6 +62,10 @@ function updateWordList(wordList, word, letters) {
   return wordList
 }
 
+/**
+ * Takes the word list and the word and uses the page object
+ * to enter the word, get the feedback, and proceed to the next word.
+ */
 function tryNextWord(wordList, word, pageObject) {
   // we should be seeing the list shrink with each iteration
   cy.log(`Word list has ${wordList.length} words`)
