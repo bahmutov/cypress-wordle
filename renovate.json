@@ -1,0 +1,16 @@
+{
+  "extends": ["config:base"],
+  "automerge": true,
+  "prHourlyLimit": 2,
+  "updateNotScheduled": false,
+  "timezone": "America/New_York",
+  "schedule": ["every weekend"],
+  "masterIssue": true,
+  "packageRules": [
+    {
+      "packagePatterns": ["*"],
+      "excludePackagePatterns": ["cypress", "cypress-data-session"],
+      "enabled": false
+    }
+  ]
+}
