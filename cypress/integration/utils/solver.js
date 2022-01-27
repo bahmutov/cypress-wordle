@@ -72,6 +72,7 @@ function tryNextWord(wordList, word, pageObject) {
   if (!word) {
     word = pickWordWithUniqueLetters(wordList)
   }
+  word = word.trim()
   cy.log(`**${word}**`)
   pageObject.enterWord(word)
 
