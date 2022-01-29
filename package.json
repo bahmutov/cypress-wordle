@@ -20,7 +20,7 @@
   "devDependencies": {
     "@sendgrid/mail": "^7.6.0",
     "cypress": "9.2.1",
-    "cypress-data-session": "1.15.1",
+    "cypress-data-session": "2.0.0",
     "prettier": "^2.5.1"
   }
 }
