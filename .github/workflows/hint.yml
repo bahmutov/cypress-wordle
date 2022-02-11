@@ -29,7 +29,9 @@ jobs:
         with:
           spec: 'cypress/integration/email-hint.js'
           env: 'hints=${{ github.event.inputs.hints }}'
+          tag: 'hint'
         env:
           SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
           SENDGRID_FROM: ${{ secrets.SENDGRID_FROM }}
           WORDLE_HINT_EMAIL: ${{ github.event.inputs.email || secrets.WORDLE_HINT_EMAIL }}
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}

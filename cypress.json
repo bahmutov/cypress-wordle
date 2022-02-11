@@ -4,7 +4,7 @@
   "projectId": "6iu6px",
   "ignoreTestFiles": ["**/utils/*", "pages.js"],
   "retries": {
-    "runMode": 1,
+    "runMode": 2,
     "openMode": 0
   }
 }
