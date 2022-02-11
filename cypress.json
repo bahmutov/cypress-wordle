@@ -1,5 +1,5 @@
 {
-  "baseUrl": "https://www.powerlanguage.co.uk/wordle/",
+  "baseUrl": "https://www.nytimes.com/games/wordle",
   "includeShadowDom": true,
   "projectId": "6iu6px",
   "ignoreTestFiles": ["**/utils/*", "pages.js"],

@@ -58,7 +58,7 @@ describe('Wordle', () => {
     const numberOfHints = Cypress.env('hints') || 1
     expect(numberOfHints, 'number of hints').to.be.within(1, 5)
 
-    cy.visit('/')
+    cy.visit('/index.html')
     cy.get('game-icon[icon=close]:visible').click().wait(1000, silent)
 
     tryNextWord(this.wordList).then((word) => {

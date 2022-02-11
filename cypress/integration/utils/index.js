@@ -71,10 +71,12 @@ export function tryNextWord(wordList, word) {
   }
   cy.log(`**${word}**`)
   enterWord(word)
+  cy.wait(2000)
 
   return cy
     .get(`game-row[letters=${word}]`)
-    .find('game-tile', silent)
+    .find('.row')
+    .find('game-tile')
     .should('have.length', word.length)
     .then(($tiles) => {
       return $tiles.toArray().map((tile, k) => {
