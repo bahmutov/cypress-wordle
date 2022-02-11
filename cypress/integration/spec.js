@@ -5,8 +5,8 @@
 
 describe('Wordle', () => {
   it('loads', () => {
-    cy.visit('/')
-      .its('localStorage.gameState')
+    cy.visit('/index.html')
+      .its('localStorage.nyt-wordle-state')
       .then(JSON.parse)
       .its('solution')
       .then((word) => {

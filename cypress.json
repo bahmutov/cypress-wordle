@@ -6,5 +6,10 @@
   "retries": {
     "runMode": 2,
     "openMode": 0
-  }
+  },
+  "blockHosts": [
+    "www.googletagmanager.com",
+    "sb.scorecardresearch.com",
+    "dd.nytimes.com"
+  ]
 }
