@@ -12,8 +12,8 @@ describe('Wordle', () => {
 
   it('sets the solution word using the clock', function () {
     cy.clock(new Date('2022-01-25T18:55:15.554Z'), ['Date'])
-    cy.visit('/')
-      .its('localStorage.gameState')
+    cy.visit('/index.html')
+      .its('localStorage.nyt-wordle-state')
       .then(JSON.parse)
       .should('have.property', 'solution', 'sugar')
     Start.close()

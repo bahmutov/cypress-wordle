@@ -113,7 +113,7 @@ describe('Wordle', () => {
     // while leaving all other time functions unchanged
     // https://on.cypress.io/clock
     cy.clock(Date.UTC(2022, 0, 1), ['Date'])
-    cy.visit('/')
+    cy.visit('/index.html')
     cy.get('game-icon[icon=close]:visible').click().wait(1000, silent)
     cy.get('#settings-button').click().wait(1000)
     cy.get('game-switch#hard-mode')

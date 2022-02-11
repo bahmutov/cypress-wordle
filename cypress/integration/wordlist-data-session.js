@@ -140,7 +140,7 @@ describe('Wordle word list using data session', () => {
   })
 
   afterEach(() => {
-    gameState = JSON.parse(localStorage.getItem('gameState') || '')
+    gameState = JSON.parse(localStorage.getItem('nyt-wordle-state') || '')
     statistics = localStorage.getItem('statistics')
   })
 
@@ -154,7 +154,7 @@ describe('Wordle word list using data session', () => {
       // while leaving all other time functions unchanged
       // https://on.cypress.io/clock
       cy.clock(Date.UTC(2022, 0, day), ['Date'])
-      cy.visit('/').then(() => {
+      cy.visit('/index.html').then(() => {
         console.log(localStorage.getItem('gameState'))
       })
 
