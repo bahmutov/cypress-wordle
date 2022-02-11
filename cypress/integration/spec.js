@@ -16,5 +16,12 @@ describe('Wordle', () => {
         })
         cy.window().trigger('keydown', { key: 'Enter' })
       })
+
+    cy.log('**we solved it**')
+    cy.get('#game-toaster').contains('Genius').should('be.visible')
+    cy.get('game-stats')
+      .find('.container')
+      .should('be.visible')
+      .wait(1000, { log: false })
   })
 })

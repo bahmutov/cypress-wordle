@@ -10,6 +10,7 @@
   "blockHosts": [
     "www.googletagmanager.com",
     "sb.scorecardresearch.com",
-    "dd.nytimes.com"
+    "dd.nytimes.com",
+    "a.nytimes.com"
   ]
 }
