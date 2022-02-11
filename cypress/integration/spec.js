@@ -27,5 +27,9 @@ describe('Wordle', () => {
       .find('.container')
       .should('be.visible')
       .wait(1000, { log: false })
+    cy.get('game-modal[open]').find('game-icon[icon=close]').click()
+    cy.get('game-modal').should('not.have.attr', 'open')
+
+    // cy.get('game-row[letters=ulcer]').find('game-tile')
   })
 })

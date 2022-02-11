@@ -120,7 +120,7 @@ describe('Wordle', () => {
       })
     }).as('words')
 
-    cy.visit('/')
+    cy.visit('/index.html')
     cy.get('game-icon[icon=close]:visible').click().wait(1000, silent)
     cy.get('#settings-button').click().wait(1000)
     cy.get('game-switch#hard-mode')

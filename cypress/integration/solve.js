@@ -22,7 +22,6 @@ function tryNextWord(wordList) {
   // thus we cannot simple filter out the letters if we have seen them already
   const seen = new Set()
   cy.get(`game-row[letters=${word}]`)
-    .pause()
     .find('game-tile')
     .should('have.length', word.length)
     .each(($tile, k) => {
@@ -67,7 +66,7 @@ describe('Wordle', () => {
         res.body = res.body.replace('=["cigar', '=window.wordList=["cigar')
       })
     }).as('words')
-    cy.visit('/')
+    cy.visit('/index.html')
       // the "window.wordList" variable is now available
       // that will be our initial list of words
       .its('wordList')
