@@ -23,6 +23,9 @@ jobs:
       - name: Checkout 🛎
         uses: actions/checkout@v2
 
+      - name: Print GitHub variables 🖨
+        run: npx @bahmutov/print-env GITHUB
+
       - name: Cypress run 🧪
         #  https://github.com/cypress-io/github-action
         uses: cypress-io/github-action@v2
