@@ -26,6 +26,9 @@ jobs:
       - name: Print GitHub variables 🖨
         run: npx @bahmutov/print-env GITHUB
 
+      - name: Echo env variables
+        run: echo "run ID and run attempt ${{ env.GITHUB_RUN_ID }}-${{ env.GITHUB_RUN_ATTEMPT }}"
+
       - name: Cypress run 🧪
         #  https://github.com/cypress-io/github-action
         uses: cypress-io/github-action@v2
@@ -41,3 +44,4 @@ jobs:
           SENDGRID_FROM: ${{ secrets.SENDGRID_FROM }}
           WORDLE_HINT_EMAIL: ${{ github.event.inputs.email || secrets.WORDLE_HINT_EMAIL }}
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          DEBUG: '@cypress/github-action'
