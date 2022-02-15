@@ -27,7 +27,7 @@ jobs:
         run: npx @bahmutov/print-env GITHUB
 
       - name: Echo env variables
-        run: echo "run ID and run attempt ${{ env.GITHUB_RUN_ID }}-${{ env.GITHUB_RUN_ATTEMPT }}"
+        run: echo "run ID and run attempt ${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
 
       - name: Cypress run 🧪
         #  https://github.com/cypress-io/github-action
