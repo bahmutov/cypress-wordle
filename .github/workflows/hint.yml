@@ -29,6 +29,10 @@ jobs:
       - name: Echo env variables
         run: echo "run ID and run attempt ${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
 
+      - name: Export CI build id 📤
+        run: echo ::set-output name=ci_build_id::${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}
+        id: export-ci-build-id
+
       - name: Cypress run 🧪
         #  https://github.com/cypress-io/github-action
         uses: cypress-io/github-action@v2
@@ -38,7 +42,7 @@ jobs:
           record: true
           group: 'hint'
           tag: 'hint'
-          ci-build-id: ${{ env.GITHUB_RUN_ID }}-${{ env.GITHUB_RUN_ATTEMPT }}
+          ci-build-id: ${{ steps.export-ci-build-id.outputs.ci_build_id }}
         env:
           SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
           SENDGRID_FROM: ${{ secrets.SENDGRID_FROM }}
