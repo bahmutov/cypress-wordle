@@ -35,7 +35,7 @@ jobs:
           record: true
           group: 'hint'
           tag: 'hint'
-          ci-build-id: '${{ env.GITHUB_RUN_ID }}-${{ env.GITHUB_RUN_ATTEMPT }}'
+          ci-build-id: ${{ env.GITHUB_RUN_ID }}-${{ env.GITHUB_RUN_ATTEMPT }}
         env:
           SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
           SENDGRID_FROM: ${{ secrets.SENDGRID_FROM }}
