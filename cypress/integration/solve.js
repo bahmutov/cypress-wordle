@@ -14,6 +14,7 @@ function tryNextWord(wordList) {
   expect(wordList).to.not.be.empty
   const word = Cypress._.sample(wordList)
   expect(word, 'picked word').to.be.a('string')
+  cy.log(`**${word}**`)
   enterWord(word)
 
   // count the correct letters. If we have all letters correct, we are done
