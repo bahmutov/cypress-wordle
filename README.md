@@ -22,6 +22,10 @@
 
 You can find several videos explaining how to play and solve Wordle using Cypress in my playlist [Cypress Wordle](https://www.youtube.com/playlist?list=PLP9o9QNnQuAaihgCPlXyzlj_P-1TTbj-O).
 
+## Presentations
+
+- [Cypress is a GREAT Wordle player](https://slides.com/bahmutov/cypress-is-a-great-wordle-player)
+
 ## Small print
 
 Author: Gleb Bahmutov &lt;gleb.bahmutov@gmail.com&gt; &copy; 2022
