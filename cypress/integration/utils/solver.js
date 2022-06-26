@@ -3,6 +3,8 @@
 
 import { pickWordWithUniqueLetters } from '.'
 
+export const evaluations = ['absent', 'present', 'correct']
+
 export function solve(startWord, pageObject) {
   expect(pageObject, 'page object')
     .to.be.an('object')
@@ -19,6 +21,13 @@ export function solve(startWord, pageObject) {
  * and trims the word list to remove words that don't match.
  */
 function updateWordList(wordList, word, letters) {
+  letters.forEach((info) => {
+    const { letter, evaluation } = info
+    if (!evaluations.includes(evaluation)) {
+      throw new Error(`Unknown evaluation ${evaluation} for letter ${letter}`)
+    }
+  })
+
   // look at the letters by status: first the correct ones,
   // then the present ones, then the absent ones
   const correctLetters = Cypress._.filter(letters, {
@@ -40,9 +49,9 @@ function updateWordList(wordList, word, letters) {
   console.table(ordered)
   const seen = new Set()
   ordered.forEach(({ k, letter, evaluation }) => {
-    // only consider the status from the characters
-    // we see for the first time in this word
     if (seen.has(letter)) {
+      // only consider the status from the characters
+      // we see for the first time in this word
       return
     }
     seen.add(letter)
@@ -68,20 +77,26 @@ function updateWordList(wordList, word, letters) {
  */
 function tryNextWord(wordList, word, pageObject) {
   // we should be seeing the list shrink with each iteration
-  cy.log(`Word list has ${wordList.length} words`)
-  if (!word) {
-    word = pickWordWithUniqueLetters(wordList)
-  }
-  word = word.trim()
-  cy.log(`**${word}**`)
-  pageObject.enterWord(word)
-
-  return pageObject.getLetters(word).then((letters) => {
-    wordList = updateWordList(wordList, word, letters)
-    if (wordList === word) {
-      // we solved it!
-      return word
+  cy.log(`Word list has ${wordList.length} words`).then(() => {
+    if (!word) {
+      word = pickWordWithUniqueLetters(wordList)
+      if (!word) {
+        throw new Error(
+          `Could not pick the next word from a list with ${wordList.length} words`,
+        )
+      }
     }
-    return tryNextWord(wordList, null, pageObject)
+    word = word.trim()
+    cy.log(`**${word}**`)
+    pageObject.enterWord(word)
+
+    return pageObject.getLetters(word).then((letters) => {
+      wordList = updateWordList(wordList, word, letters)
+      if (wordList === word) {
+        // we solved it!
+        return word
+      }
+      return tryNextWord(wordList, null, pageObject)
+    })
   })
 }

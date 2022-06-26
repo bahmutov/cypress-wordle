@@ -6,6 +6,7 @@ import {
   pickWordWithUniqueLetters,
   pickWordWithMostCommonLetters,
 } from './utils'
+import { closeSelector } from './utils/pages'
 const silent = { log: false }
 
 function enterWord(word) {
@@ -96,7 +97,7 @@ function tryNextWord(wordList) {
     })
 }
 
-describe('Wordle', () => {
+describe.skip('Wordle', () => {
   it('solves it in Hard mode on specific date', () => {
     // look up the word list in the JavaScript bundle
     // served by the application
@@ -114,14 +115,11 @@ describe('Wordle', () => {
     // https://on.cypress.io/clock
     cy.clock(Date.UTC(2022, 0, 1), ['Date'])
     cy.visit('/index.html')
-    cy.get('game-icon[icon=close]:visible').click().wait(1000, silent)
+    cy.get(closeSelector).click().wait(1000, silent)
     cy.get('#settings-button').click().wait(1000)
-    cy.get('game-switch#hard-mode')
-      .find('.container')
-      .click()
-      .wait(1000, silent)
-    cy.get('game-switch#hard-mode').should('have.attr', 'checked')
-    cy.get('game-icon[icon=close]:visible').click().wait(1000)
+    cy.get('[aria-label=hardMode]').click().wait(1000, silent)
+    cy.get('[aria-label=hardMode]').should('have.attr', 'aria-checked', 'true')
+    cy.get(closeSelector).click().wait(1000)
 
     cy.window()
       // the "window.wordList" variable is now available

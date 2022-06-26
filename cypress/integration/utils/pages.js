@@ -9,10 +9,12 @@ import { enterWord } from '.'
 
 const silent = { log: false }
 
+export const closeSelector = '[data-testid=icon-close]'
+
 export const Start = {
   close() {
     cy.log('**hiding the initial game modal**')
-    return cy.get('game-icon[icon=close]:visible').click().wait(1000, silent)
+    return cy.get(closeSelector).click().wait(1000, silent)
   },
 }
 
@@ -25,14 +27,15 @@ export const Playing = {
    */
   getLetters(word) {
     return cy
-      .get(`game-row[letters=${word}]`)
-      .find('game-tile', silent)
+      .get('[data-testid=tile]')
+      .not('[data-state=empty]')
+      .then(($tiles) => $tiles.slice($tiles.length - 5))
       .should('have.length', word.length)
       .then(($tiles) => {
         return $tiles.toArray().map((tile, k) => {
-          const letter = tile.getAttribute('letter')
-          const evaluation = tile.getAttribute('evaluation')
-          console.log('%d: letter %s is %s', k, letter, evaluation)
+          const letter = tile.innerText
+          const evaluation = tile.getAttribute('data-state')
+          console.log('%d: letter %s is %s', k, letter, evaluation, tile)
           return { k, letter, evaluation }
         })
       })
@@ -44,6 +47,6 @@ export const Solved = {
   close() {
     cy.log('**hiding the solved game modal**')
     cy.get('#share-button').should('be.visible').wait(1000, silent)
-    return cy.get('game-icon[icon=close]:visible').click().wait(1000, silent)
+    return cy.get(closeSelector).click().wait(1000, silent)
   },
 }

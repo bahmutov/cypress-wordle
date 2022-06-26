@@ -1,7 +1,7 @@
 // @ts-check
 
 const silent = { log: false }
-const evaluations = ['absent', 'present', 'correct']
+export const evaluations = ['absent', 'present', 'correct']
 
 export function getLetters() {
   return Cypress._.range(0, 26).map((i) => String.fromCharCode(i + 97))
@@ -61,7 +61,7 @@ export function enterWord(word) {
   cy.window(silent)
     .trigger('keydown', { key: 'Enter', log: false })
     // let the letter animation finish
-    .wait(1000, silent)
+    .wait(2000, silent)
 }
 
 export function tryNextWord(wordList, word) {
