@@ -58,8 +58,9 @@ describe('Wordle', () => {
     const numberOfHints = Cypress.env('hints') || 1
     expect(numberOfHints, 'number of hints').to.be.within(1, 5)
 
+    const closeSelector = '[data-testid=icon-close]'
     cy.visit('/index.html')
-    cy.get('game-icon[icon=close]:visible').click().wait(1000, silent)
+    cy.get(closeSelector).click().wait(1000, silent)
 
     tryNextWord(this.wordList).then((word) => {
       // after we have entered the word and looked at the feedback
@@ -69,12 +70,12 @@ describe('Wordle', () => {
 
         cy.log('**SOLVED**')
         cy.get('#share-button').should('be.visible').wait(1000, silent)
-        cy.get('game-icon[icon=close]:visible').click().wait(1000, silent)
+        cy.get(closeSelector).click().wait(1000, silent)
 
         cy.log('**hiding the solved letters**')
-        cy.get('game-tile[letter]', silent).each(($gameTile) => {
+        cy.get('[data-testid=tile]', silent).each(($gameTile) => {
           cy.wrap($gameTile, silent)
-            .find('.tile', silent)
+            // .find('.tile', silent)
             .invoke(silent, 'text', '')
         })
 
@@ -83,15 +84,16 @@ describe('Wordle', () => {
         // let's reveal the tiles containing the letters
         hint.split('').forEach((letter, index) => {
           if (letter !== maskLetter) {
-            cy.get(`game-row[letters=${word}]`)
-              .find('game-tile[letter]')
+            cy.get('[data-testid=tile]')
+              .not('[data-state=empty]')
+              .then(($tiles) => $tiles.slice($tiles.length - 5))
               .eq(index)
-              .find('.tile')
               .invoke('text', letter)
           }
         })
 
-        cy.get('#board-container')
+        // cy.get('#board-container')
+        cy.get('[class*=boardContainer]')
           .wait(1500, silent)
           .should('be.visible')
           .screenshot('solved', { overwrite: true })

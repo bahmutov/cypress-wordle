@@ -1,6 +1,7 @@
 // @ts-check
 
 const silent = { log: false }
+export const evaluations = ['absent', 'present', 'correct']
 
 export function getLetters() {
   return Cypress._.range(0, 26).map((i) => String.fromCharCode(i + 97))
@@ -71,18 +72,33 @@ export function tryNextWord(wordList, word) {
   }
   cy.log(`**${word}**`)
   enterWord(word)
-  cy.wait(2000)
+  cy.wait(1000)
 
+  const characters = word.split('')
+  // get the last 5 letters
   return cy
-    .get(`game-row[letters=${word}]`)
-    .find('.row')
-    .find('game-tile')
+    .get('[data-testid=tile]')
+    .not('[data-state=empty]')
+    .then(($tiles) => $tiles.slice($tiles.length - 5))
     .should('have.length', word.length)
     .then(($tiles) => {
       return $tiles.toArray().map((tile, k) => {
-        const letter = tile.getAttribute('letter')
-        const evaluation = tile.getAttribute('evaluation')
-        console.log('%d: letter %s is %s', k, letter, evaluation)
+        const letter = tile.innerText.toLowerCase()
+        const evaluation = tile.getAttribute('data-state') || 'absent'
+        console.log('%d: letter %s is %s', k, letter, evaluation, tile)
+
+        // make sure the letter from the picked word
+        if (letter !== characters[k]) {
+          throw new Error(
+            `Incorrect letter ${k + 1}, found ${letter}, expected ${
+              characters[k]
+            }`,
+          )
+        }
+        // make sure the evaluation makes sense
+        if (!evaluations.includes(evaluation)) {
+          throw new Error(`Unknown evaluation ${evaluation}`)
+        }
         return { k, letter, evaluation }
       })
     })

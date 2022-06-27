@@ -85,7 +85,7 @@ function tryNextWord(wordList) {
     })
 }
 
-describe('Wordle', () => {
+describe.skip('Wordle', () => {
   // fetch the word list once
   let wordList
 

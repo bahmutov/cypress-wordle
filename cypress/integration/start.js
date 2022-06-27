@@ -7,7 +7,7 @@ import { solve } from './utils/solver'
 
 const silent = { log: false }
 
-describe('Wordle', () => {
+describe.skip('Wordle', () => {
   beforeEach(() => {
     cy.fixture('wordlist.json').as('wordList')
   })

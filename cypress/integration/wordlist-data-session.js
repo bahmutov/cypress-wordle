@@ -85,7 +85,7 @@ function tryNextWord(wordList) {
     })
 }
 
-describe('Wordle word list using data session', () => {
+describe.skip('Wordle word list using data session', () => {
   beforeEach(() => {
     // load the word list from the site
     // by intercepting it in the JavaScript bundle

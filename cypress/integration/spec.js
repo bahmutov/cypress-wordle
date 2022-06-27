@@ -3,7 +3,7 @@
 // Watch the video "Solve Wordle Game Using Cypress"
 // https://youtu.be/pzFzOKEV-eo
 
-describe('Wordle', () => {
+describe.skip('Wordle', () => {
   it('loads', () => {
     cy.visit('/index.html')
       .its('localStorage.nyt-wordle-state')

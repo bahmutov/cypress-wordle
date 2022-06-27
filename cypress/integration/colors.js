@@ -1,6 +1,8 @@
 /// <reference types="cypress" />
 
 import { pickWordWithMostCommonLetters, countUniqueLetters } from './utils'
+import { closeSelector } from './utils/pages'
+
 const silent = { log: false }
 
 function enterWord(word) {
@@ -86,7 +88,7 @@ function tryNextWord(wordList) {
     })
 }
 
-describe('Wordle', () => {
+describe.skip('Wordle', () => {
   it('uses accessible colors and night mode', () => {
     // look up the word list in the JavaScript bundle
     // served by the application
@@ -99,7 +101,7 @@ describe('Wordle', () => {
       })
     }).as('words')
     cy.visit('/')
-    cy.get('game-icon[icon=close]:visible').click().wait(1000, silent)
+    cy.get(closeSelector).click().wait(1000, silent)
     cy.get('#settings-button').click().wait(1000)
 
     cy.get('game-switch#hard-mode').find('.container').click()
