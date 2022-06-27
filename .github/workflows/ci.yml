@@ -9,7 +9,8 @@ jobs:
     # https://youtu.be/fJmNyMnBvbs for details
     uses: bahmutov/cypress-workflows/.github/workflows/parallel.yml@v1
     with:
-      n: 5
+      # we do not need many machines to run the hint spec
+      n: 1
       group: 'All tests'
     secrets:
       recordKey: ${{ secrets.CYPRESS_RECORD_KEY }}
