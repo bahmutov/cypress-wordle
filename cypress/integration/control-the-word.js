@@ -5,7 +5,7 @@
 import { Start, Playing, Solved } from './utils/pages'
 import { solve } from './utils/solver'
 
-describe('Wordle', () => {
+describe.skip('Wordle', () => {
   beforeEach(() => {
     cy.fixture('wordlist.json').as('wordList')
   })

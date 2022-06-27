@@ -55,7 +55,7 @@ function tryNextWord(wordList) {
     })
 }
 
-describe('Wordle', () => {
+describe.skip('Wordle', () => {
   it('solves it', () => {
     // look up the word list in the JavaScript bundle
     // served by the application
