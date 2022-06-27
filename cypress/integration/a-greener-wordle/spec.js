@@ -8,7 +8,8 @@ import { Start, Playing, Solved } from '../utils/pages'
 import { solve } from '../utils/solver'
 
 const baseUrl = 'https://agreenerworldle.org/'
-describe('A greener Wordle', { baseUrl }, () => {
+
+describe.skip('A greener Wordle', { baseUrl }, () => {
   beforeEach(() => {
     // look up the word list in the JavaScript bundle
     // served by the application
