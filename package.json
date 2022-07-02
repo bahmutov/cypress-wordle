@@ -19,7 +19,7 @@
   "homepage": "https://github.com/bahmutov/cypress-wordle#readme",
   "devDependencies": {
     "@sendgrid/mail": "^7.6.0",
-    "cypress": "9.6.1",
+    "cypress": "9.7.0",
     "cypress-data-session": "2.0.0",
     "prettier": "^2.5.1"
   }
