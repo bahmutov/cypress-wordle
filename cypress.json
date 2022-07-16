@@ -1,6 +1,7 @@
 {
   "baseUrl": "https://www.nytimes.com/games/wordle",
   "includeShadowDom": true,
+  "viewportHeight": 1000,
   "projectId": "6iu6px",
   "ignoreTestFiles": ["**/utils/*", "pages.js"],
   "retries": {

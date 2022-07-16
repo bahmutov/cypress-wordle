@@ -69,7 +69,10 @@ describe('Wordle', () => {
         expect(word).to.have.length(5)
 
         cy.log('**SOLVED**')
-        cy.get('#share-button').should('be.visible').wait(1000, silent)
+        cy.get('#share-button')
+          .scrollIntoView()
+          .should('be.visible')
+          .wait(1000, silent)
         cy.get(closeSelector).click().wait(1000, silent)
 
         cy.log('**hiding the solved letters**')
@@ -80,6 +83,8 @@ describe('Wordle', () => {
         })
 
         const hint = pickHints(word, numberOfHints)
+        cy.log(`hint **${hint}**`)
+        cy.task('print', `hint **${hint}**`)
         // the hint will be something like "__c_a"
         // let's reveal the tiles containing the letters
         hint.split('').forEach((letter, index) => {
