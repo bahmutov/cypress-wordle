@@ -14,5 +14,6 @@
     "dd.nytimes.com",
     "a.nytimes.com",
     "c.amazon-adsystem.com"
-  ]
+  ],
+  "experimentalStudio": true
 }
