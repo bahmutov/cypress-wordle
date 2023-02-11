@@ -61,6 +61,7 @@ describe('Wordle', () => {
     const closeSelector = '[data-testid=icon-close]'
     cy.visit('/index.html')
     cy.get(closeSelector).click().wait(1000, silent)
+    cy.get('#top.ad').invoke('remove')
 
     tryNextWord(this.wordList).then((word) => {
       // after we have entered the word and looked at the feedback
@@ -69,11 +70,14 @@ describe('Wordle', () => {
         expect(word).to.have.length(5)
 
         cy.log('**SOLVED**')
-        cy.get('#share-button')
+        cy.get('[data-testid=modal-overlay][aria-label="stats Modal"]')
+          .should('be.visible')
           .scrollIntoView()
           .should('be.visible')
           .wait(1000, silent)
-        cy.get(closeSelector).click().wait(1000, silent)
+          .find('button[aria-label=Close]')
+          .click()
+          .wait(1000, silent)
 
         cy.log('**hiding the solved letters**')
         cy.get('[data-testid=tile]', silent).each(($gameTile) => {
