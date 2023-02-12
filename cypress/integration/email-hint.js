@@ -61,7 +61,14 @@ describe('Wordle', () => {
     const closeSelector = '[data-testid=icon-close]'
     cy.visit('/index.html')
     cy.get(closeSelector).click().wait(1000, silent)
-    cy.get('#top.ad').invoke('remove')
+    cy.get('#top.ad')
+      .should(Cypress._.noop)
+      .then(($ad) => {
+        if ($ad.length) {
+          $ad.remove()
+          cy.log('removed top ad')
+        }
+      })
 
     tryNextWord(this.wordList).then((word) => {
       // after we have entered the word and looked at the feedback
