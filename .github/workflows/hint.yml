@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout 🛎
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Print GitHub variables 🖨
         run: npx @bahmutov/print-env GITHUB
@@ -30,12 +30,12 @@ jobs:
         run: echo "run ID and run attempt ${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
 
       - name: Export CI build id 📤
-        run: echo ::set-output name=ci_build_id::${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}
+        run: echo "ci_build_id=${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}" >> $GITHUB_OUTPUT
         id: export-ci-build-id
 
       - name: Cypress run 🧪
         #  https://github.com/cypress-io/github-action
-        uses: cypress-io/github-action@v2
+        uses: cypress-io/github-action@v5
         with:
           spec: 'cypress/integration/email-hint.js'
           env: 'hints=${{ github.event.inputs.hints }}'
