@@ -58,8 +58,10 @@ describe('Wordle', () => {
     const numberOfHints = Cypress.env('hints') || 1
     expect(numberOfHints, 'number of hints').to.be.within(1, 5)
 
-    const closeSelector = '[data-testid=icon-close]'
     cy.visit('/index.html')
+    cy.contains('button', 'Play').click()
+
+    const closeSelector = 'button[aria-label=Close]'
     cy.get(closeSelector).click().wait(1000, silent)
     cy.get('#top.ad')
       .should(Cypress._.noop)
