@@ -19,11 +19,11 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout 🛎
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Cypress run 🧪
         #  https://github.com/cypress-io/github-action
-        uses: cypress-io/github-action@v2
+        uses: cypress-io/github-action@v5
         with:
           spec: 'cypress/integration/start.js'
           env: 'startWord=${{ github.event.inputs.startWord }}'

@@ -58,12 +58,15 @@ describe('Wordle', () => {
     const numberOfHints = Cypress.env('hints') || 1
     expect(numberOfHints, 'number of hints').to.be.within(1, 5)
 
+    cy.intercept('/ads.txt', { statusCode: 500 })
     cy.visit('/index.html')
     cy.contains('button', 'Play').click()
 
     const closeSelector = 'button[aria-label=Close]'
     cy.get(closeSelector).click().wait(1000, silent)
-    cy.get('#top.ad')
+    cy.get('#wordle-app-game').should('be.visible')
+
+    cy.get('#ad-top')
       .should(Cypress._.noop)
       .then(($ad) => {
         if ($ad.length) {
