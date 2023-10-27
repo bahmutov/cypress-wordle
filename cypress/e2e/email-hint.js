@@ -74,6 +74,7 @@ describe('Wordle', () => {
           cy.log('removed top ad')
         }
       })
+      .wait(1000, silent)
 
     tryNextWord(this.wordList).then((word) => {
       // after we have entered the word and looked at the feedback
