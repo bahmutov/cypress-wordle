@@ -18,7 +18,7 @@ on:
     - cron: '0 7 * * *'
 jobs:
   hint:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout 🛎
         uses: actions/checkout@v4
@@ -35,9 +35,9 @@ jobs:
 
       - name: Cypress run 🧪
         #  https://github.com/cypress-io/github-action
-        uses: cypress-io/github-action@v5
+        uses: cypress-io/github-action@v6
         with:
-          spec: 'cypress/integration/email-hint.js'
+          spec: 'cypress/e2e/email-hint.js'
           env: 'hints=${{ github.event.inputs.hints }}'
           record: true
           group: 'hint'
