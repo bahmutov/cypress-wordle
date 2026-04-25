@@ -7,7 +7,7 @@ jobs:
     # https://github.com/bahmutov/cypress-workflows
     # Watch the video "Run Wordle E2E Tests On GitHub Actions Using A Workflow"
     # https://youtu.be/fJmNyMnBvbs for details
-    uses: bahmutov/cypress-workflows/.github/workflows/parallel.yml@v1
+    uses: bahmutov/cypress-workflows/.github/workflows/parallel.yml@v2.3.3
     with:
       # we do not need many machines to run the hint spec
       n: 1
