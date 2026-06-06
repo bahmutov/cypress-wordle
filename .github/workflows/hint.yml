@@ -35,7 +35,7 @@ jobs:
 
       - name: Cypress run 🧪
         #  https://github.com/cypress-io/github-action
-        uses: cypress-io/github-action@v6
+        uses: cypress-io/github-action@v7.4.0
         with:
           spec: 'cypress/e2e/email-hint.js'
           env: 'hints=${{ github.event.inputs.hints }}'
